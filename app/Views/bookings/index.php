@@ -89,7 +89,7 @@
                                class="btn btn-sm btn-outline-primary" style="padding:.2rem .5rem" title="Detail">
                                 <i class="bi bi-eye"></i>
                             </a>
-                            <?php if ($b['status'] === 'pending' && session()->get('role') === 'admin'): ?>
+                            <?php if ($b['status'] === 'pending' && is_admin_role()): ?>
                             <form method="post" action="<?= base_url("bookings/approve/{$b['id']}") ?>" class="d-inline">
                                 <?= csrf_field() ?>
                                 <button class="btn btn-sm btn-success" style="padding:.2rem .5rem" title="Setujui">

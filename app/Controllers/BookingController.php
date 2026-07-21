@@ -12,14 +12,23 @@ class BookingController extends BaseController
     protected BookingModel   $bookingModel;
     protected BaseConnection $db;
 
-    /** Pilihan kebutuhan konsumsi saat booking */
+    /** Pilihan kebutuhan konsumsi saat booking (bisa dipilih lebih dari satu) */
     protected array $konsumsiOptions = [
-        ''                    => 'Tidak Perlu',
-        'Snack'               => 'Snack',
-        'Makan Siang'         => 'Makan Siang',
-        'Snack & Makan Siang' => 'Snack & Makan Siang',
-        'Coffee Break'        => 'Coffee Break',
+        'Snack Pagi'  => 'Snack Pagi',
+        'Makan Siang' => 'Makan Siang',
+        'Snack Sore'  => 'Snack Sore',
     ];
+
+    /** Gabungkan pilihan konsumsi (checkbox) menjadi satu string untuk disimpan */
+    protected function formatKonsumsi(): string
+    {
+        $selected = $this->request->getPost('konsumsi') ?? [];
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        $selected = array_values(array_filter(array_intersect($selected, array_keys($this->konsumsiOptions))));
+        return implode(', ', $selected);
+    }
 
     public function __construct()
     {
@@ -30,7 +39,7 @@ class BookingController extends BaseController
 
     protected function isAdmin(): bool
     {
-        return session()->get('role') === 'admin';
+        return is_admin_role();
     }
 
     public function index()
@@ -122,7 +131,7 @@ class BookingController extends BaseController
             'jam_mulai'       => $this->request->getPost('jam_mulai'),
             'jam_selesai'     => $this->request->getPost('jam_selesai'),
             'jumlah_peserta'  => $this->request->getPost('jumlah_peserta'),
-            'konsumsi'        => $this->request->getPost('konsumsi'),
+            'konsumsi'        => $this->formatKonsumsi(),
             'catatan'         => $this->request->getPost('catatan'),
         ];
 
@@ -249,7 +258,7 @@ class BookingController extends BaseController
             'jam_mulai'       => $this->request->getPost('jam_mulai'),
             'jam_selesai'     => $this->request->getPost('jam_selesai'),
             'jumlah_peserta'  => $this->request->getPost('jumlah_peserta'),
-            'konsumsi'        => $this->request->getPost('konsumsi'),
+            'konsumsi'        => $this->formatKonsumsi(),
             'catatan'         => $this->request->getPost('catatan'),
         ];
 

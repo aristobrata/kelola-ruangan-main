@@ -72,7 +72,7 @@ $statusCfg = [
                 <?php endif; ?>
 
                 <div class="d-flex gap-2">
-                    <?php if (session()->get('role') === 'admin'): ?>
+                    <?php if (is_admin_role()): ?>
                     <a href="<?= base_url("rooms/edit/{$room['id']}") ?>" class="btn btn-warning btn-sm flex-fill">
                         <i class="bi bi-pencil me-1"></i>Edit
                     </a>

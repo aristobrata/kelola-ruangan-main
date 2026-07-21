@@ -323,6 +323,43 @@
             box-shadow: 0 0 0 3px rgba(139,26,36,.1);
         }
 
+        /* ── KONSUMSI RADIO OPTIONS ── */
+        .konsumsi-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .65rem;
+        }
+        .konsumsi-option {
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            padding: .65rem 1rem;
+            cursor: pointer;
+            font-size: .875rem;
+            font-weight: 500;
+            color: #374151;
+            background: #fff;
+            transition: all .18s;
+            user-select: none;
+        }
+        .konsumsi-option:hover { border-color: var(--green-light); }
+        .konsumsi-option input[type="checkbox"] {
+            accent-color: var(--green-mid);
+            width: 1rem;
+            height: 1rem;
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .konsumsi-option.active {
+            border-color: var(--green-mid);
+            background: var(--green-pale);
+            color: var(--green-dark);
+            font-weight: 700;
+            box-shadow: 0 0 0 3px rgba(139,26,36,.1);
+        }
+
         /* ── BUTTONS ── */
         .btn-primary {
             background: linear-gradient(135deg, var(--green-dark), var(--green-light));
@@ -414,7 +451,7 @@
             Ditolak
         </a>
 
-        <?php if (session()->get('role') === 'admin'): ?>
+        <?php if (is_admin_role()): ?>
         <div class="nav-section-label">Administrasi</div>
         <a href="<?= base_url('reports/bookings') ?>" class="nav-link-item <?= str_starts_with(uri_string(), 'reports') ? 'active' : '' ?>">
             <span class="nav-icon"><i class="bi bi-file-earmark-excel-fill"></i></span>
@@ -432,7 +469,7 @@
             <div class="user-avatar"><?= strtoupper(substr(session()->get('nama') ?? 'U', 0, 1)) ?></div>
             <div>
                 <div class="user-name"><?= esc(session()->get('nama') ?? 'Pengguna') ?></div>
-                <div class="user-role"><?= strtoupper(session()->get('role') ?? '') ?></div>
+                <div class="user-role"><?= strtoupper(role_label(session()->get('role'))) ?></div>
             </div>
             <a href="<?= base_url('logout') ?>" class="logout-btn" title="Keluar">
                 <i class="bi bi-box-arrow-right"></i>

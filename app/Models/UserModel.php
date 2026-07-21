@@ -18,6 +18,6 @@ class UserModel extends Model
     protected $validationRules = [
         'nama'     => 'required|max_length[100]',
         'username' => 'required|max_length[50]',
-        'role'     => 'required|in_list[admin,user]',
+        'role'     => 'required|in_list[super_admin,admin,user]',
     ];
 }

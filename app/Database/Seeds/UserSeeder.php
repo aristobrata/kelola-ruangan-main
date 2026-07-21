@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
                 'nama'       => 'Administrator',
                 'username'   => 'admin',
                 'password'   => password_hash('admin123', PASSWORD_DEFAULT),
-                'role'       => 'admin',
+                'role'       => 'super_admin',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],

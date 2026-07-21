@@ -5,7 +5,7 @@
     <div>
         <div class="small text-muted mb-1"><?= count($rooms) ?> ruangan terdaftar</div>
     </div>
-    <?php if (session()->get('role') === 'admin'): ?>
+    <?php if (is_admin_role()): ?>
     <a href="<?= base_url('rooms/create') ?>" class="btn btn-primary">
         <i class="bi bi-plus-circle me-1"></i>Tambah Ruangan
     </a>
@@ -75,7 +75,7 @@
                     <a href="<?= base_url("rooms/{$room['id']}") ?>" class="btn btn-sm btn-outline-primary flex-fill" style="font-size:.8rem">
                         <i class="bi bi-eye me-1"></i>Detail
                     </a>
-                    <?php if (session()->get('role') === 'admin'): ?>
+                    <?php if (is_admin_role()): ?>
                     <a href="<?= base_url("rooms/edit/{$room['id']}") ?>" class="btn btn-sm btn-outline-secondary" title="Edit">
                         <i class="bi bi-pencil"></i>
                     </a>
@@ -83,7 +83,7 @@
                     <a href="<?= base_url("bookings/create?room_id={$room['id']}") ?>" class="btn btn-sm btn-success" title="Booking" style="font-size:.8rem">
                         <i class="bi bi-calendar-plus"></i>
                     </a>
-                    <?php if (session()->get('role') === 'admin'): ?>
+                    <?php if (is_admin_role()): ?>
                     <form method="post" action="<?= base_url("rooms/delete/{$room['id']}") ?>" class="d-inline"
                           onsubmit="return confirm('Hapus ruangan ini?')">
                         <?= csrf_field() ?>
@@ -104,7 +104,7 @@
             <i class="bi bi-door-closed fs-1 d-block mb-3" style="color:#8b1a24; opacity:.3"></i>
             <h6>Belum ada ruangan terdaftar</h6>
             <p class="small">Tambahkan ruangan untuk mulai mengelola pemesanan.</p>
-            <?php if (session()->get('role') === 'admin'): ?>
+            <?php if (is_admin_role()): ?>
             <a href="<?= base_url('rooms/create') ?>" class="btn btn-primary">Tambah Ruangan Pertama</a>
             <?php endif; ?>
         </div>

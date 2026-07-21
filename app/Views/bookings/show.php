@@ -96,7 +96,7 @@ $statusCfg = [
         <!-- Action Buttons -->
         <div class="d-flex flex-wrap gap-2">
             <?php if ($booking['status'] === 'pending'): ?>
-            <?php if (session()->get('role') === 'admin'): ?>
+            <?php if (is_admin_role()): ?>
             <form method="post" action="<?= base_url("bookings/approve/{$booking['id']}") ?>">
                 <?= csrf_field() ?>
                 <button class="btn btn-success"><i class="bi bi-check-circle me-1"></i>Setujui</button>
@@ -113,7 +113,7 @@ $statusCfg = [
             </a>
             <?php endif; ?>
 
-            <?php if ($booking['status'] === 'approved' && session()->get('role') === 'admin'): ?>
+            <?php if ($booking['status'] === 'approved' && is_admin_role()): ?>
             <form method="post" action="<?= base_url("bookings/selesai/{$booking['id']}") ?>">
                 <?= csrf_field() ?>
                 <button class="btn btn-primary"><i class="bi bi-flag me-1"></i>Tandai Selesai</button>

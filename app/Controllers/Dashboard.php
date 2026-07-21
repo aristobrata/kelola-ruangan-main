@@ -12,7 +12,7 @@ class Dashboard extends BaseController
         $roomModel    = new RoomModel();
         $bookingModel = new BookingModel();
 
-        $isAdmin      = session()->get('role') === 'admin';
+        $isAdmin      = is_admin_role();
         // User (pembooking) hanya melihat statistik & jadwal booking miliknya sendiri.
         $filterUserId = $isAdmin ? null : (int) session()->get('user_id');
 

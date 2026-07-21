@@ -52,12 +52,19 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Role <span class="text-danger">*</span></label>
+                    <?php $roleVal = old('role', $user['role'] ?? 'user'); ?>
+                    <?php if (is_super_admin()): ?>
                     <select name="role" class="form-select" required>
-                        <?php $roleVal = old('role', $user['role'] ?? 'user'); ?>
+                        <option value="super_admin" <?= $roleVal === 'super_admin' ? 'selected' : '' ?>>Super Admin</option>
                         <option value="admin" <?= $roleVal === 'admin' ? 'selected' : '' ?>>Admin</option>
                         <option value="user" <?= $roleVal === 'user' ? 'selected' : '' ?>>User (Pembooking)</option>
                     </select>
-                    <div class="form-text">Admin mengelola ruangan & menyetujui booking. User membuat booking untuk dirinya sendiri.</div>
+                    <div class="form-text">Super Admin &amp; Admin mengelola ruangan &amp; menyetujui booking. Hanya Super Admin yang bisa membuat/mengubah akun menjadi Admin. User membuat booking untuk dirinya sendiri.</div>
+                    <?php else: ?>
+                    <input type="hidden" name="role" value="user">
+                    <input type="text" class="form-control" value="User (Pembooking)" disabled>
+                    <div class="form-text">Admin hanya dapat membuat/mengelola akun dengan role User. Hubungi Super Admin untuk membuat akun Admin.</div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -13,6 +13,21 @@ class UserController extends BaseController
         $this->userModel = new UserModel();
     }
 
+    /** Role yang boleh dipilih/diberikan oleh aktor yang sedang login. */
+    protected function allowedRoles(): array
+    {
+        return is_super_admin() ? ['super_admin', 'admin', 'user'] : ['user'];
+    }
+
+    /**
+     * Admin biasa (bukan super admin) hanya boleh mengelola akun dengan role 'user'.
+     * Super admin boleh mengelola semua akun.
+     */
+    protected function canManage(array $targetUser): bool
+    {
+        return is_super_admin() || $targetUser['role'] === 'user';
+    }
+
     public function index()
     {
         $users = $this->userModel->orderBy('id', 'ASC')->findAll();
@@ -34,11 +49,13 @@ class UserController extends BaseController
 
     public function store()
     {
+        $allowedRoles = $this->allowedRoles();
+
         $rules = [
             'nama'     => 'required|max_length[100]',
             'username' => 'required|max_length[50]|is_unique[users.username]',
             'password' => 'required|min_length[6]',
-            'role'     => 'required|in_list[admin,user]',
+            'role'     => 'required|in_list[' . implode(',', $allowedRoles) . ']',
         ];
 
         if (!$this->validate($rules)) {
@@ -67,6 +84,11 @@ class UserController extends BaseController
             return redirect()->to(base_url('users'))->with('error', 'User tidak ditemukan.');
         }
 
+        if (!$this->canManage($user)) {
+            return redirect()->to(base_url('users'))
+                ->with('error', 'Hanya Super Admin yang dapat mengelola akun Admin/Super Admin.');
+        }
+
         return view('users/form', [
             'title'  => 'Edit User',
             'user'   => $user,
@@ -81,10 +103,17 @@ class UserController extends BaseController
             return redirect()->to(base_url('users'))->with('error', 'User tidak ditemukan.');
         }
 
+        if (!$this->canManage($user)) {
+            return redirect()->to(base_url('users'))
+                ->with('error', 'Hanya Super Admin yang dapat mengelola akun Admin/Super Admin.');
+        }
+
+        $allowedRoles = $this->allowedRoles();
+
         $rules = [
             'nama'     => 'required|max_length[100]',
             'username' => "required|max_length[50]|is_unique[users.username,id,{$id}]",
-            'role'     => 'required|in_list[admin,user]',
+            'role'     => 'required|in_list[' . implode(',', $allowedRoles) . ']',
         ];
         if ($this->request->getPost('password')) {
             $rules['password'] = 'min_length[6]';
@@ -99,12 +128,13 @@ class UserController extends BaseController
             ]);
         }
 
-        // Jangan biarkan admin terakhir diturunkan menjadi user biasa
-        if ($user['role'] === 'admin' && $this->request->getPost('role') !== 'admin') {
-            $adminCount = $this->userModel->where('role', 'admin')->countAllResults();
-            if ($adminCount <= 1) {
+        // Jangan biarkan super admin terakhir diturunkan perannya —
+        // supaya sistem tidak pernah kehilangan akun pengelola tertinggi.
+        if ($user['role'] === 'super_admin' && $this->request->getPost('role') !== 'super_admin') {
+            $superAdminCount = $this->userModel->where('role', 'super_admin')->countAllResults();
+            if ($superAdminCount <= 1) {
                 return redirect()->back()->withInput()
-                    ->with('error', 'Tidak dapat mengubah role. Minimal harus ada 1 admin.');
+                    ->with('error', 'Tidak dapat mengubah role. Minimal harus ada 1 Super Admin.');
             }
         }
 
@@ -128,14 +158,19 @@ class UserController extends BaseController
             return redirect()->to(base_url('users'))->with('error', 'User tidak ditemukan.');
         }
 
-        if ((int)$id === (int)session()->get('user_id')) {
+        if ((int) $id === (int) session()->get('user_id')) {
             return redirect()->to(base_url('users'))->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
 
-        if ($user['role'] === 'admin') {
-            $adminCount = $this->userModel->where('role', 'admin')->countAllResults();
-            if ($adminCount <= 1) {
-                return redirect()->to(base_url('users'))->with('error', 'Tidak dapat menghapus admin terakhir.');
+        if (!$this->canManage($user)) {
+            return redirect()->to(base_url('users'))
+                ->with('error', 'Hanya Super Admin yang dapat menghapus akun Admin/Super Admin.');
+        }
+
+        if ($user['role'] === 'super_admin') {
+            $superAdminCount = $this->userModel->where('role', 'super_admin')->countAllResults();
+            if ($superAdminCount <= 1) {
+                return redirect()->to(base_url('users'))->with('error', 'Tidak dapat menghapus Super Admin terakhir.');
             }
         }
 

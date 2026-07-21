@@ -27,13 +27,17 @@
                     <td class="fw-semibold" style="font-size:.85rem"><?= esc($u['nama']) ?></td>
                     <td style="font-size:.85rem"><?= esc($u['username']) ?></td>
                     <td class="text-center">
-                        <?php if ($u['role'] === 'admin'): ?>
+                        <?php if ($u['role'] === 'super_admin'): ?>
+                        <span class="badge px-2 py-1" style="background:#f4e4b8;color:#7a5c00;font-size:.75rem">Super Admin</span>
+                        <?php elseif ($u['role'] === 'admin'): ?>
                         <span class="badge px-2 py-1" style="background:#fbe9ea;color:#8b1a24;font-size:.75rem">Admin</span>
                         <?php else: ?>
                         <span class="badge px-2 py-1" style="background:#f3f6f4;color:#374151;font-size:.75rem">User</span>
                         <?php endif; ?>
                     </td>
                     <td class="text-center">
+                        <?php $canManage = is_super_admin() || $u['role'] === 'user'; ?>
+                        <?php if ($canManage): ?>
                         <div class="d-flex gap-1 justify-content-center">
                             <a href="<?= base_url("users/edit/{$u['id']}") ?>"
                                class="btn btn-sm btn-outline-secondary" style="padding:.2rem .5rem" title="Edit">
@@ -49,6 +53,9 @@
                             </form>
                             <?php endif; ?>
                         </div>
+                        <?php else: ?>
+                        <span class="text-muted" style="font-size:.75rem">—</span>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

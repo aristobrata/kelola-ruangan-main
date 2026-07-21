@@ -209,6 +209,8 @@
 
     <div class="login-footer">
         <div class="mb-1">
+            <i class="bi bi-info-circle me-1"></i>
+            Default: <strong>admin / admin123</strong> &nbsp;|&nbsp; <strong>staff / staff123</strong>
         </div>
         <div>&copy; <?= date('Y') ?> PT Semen Padang — Unit Learning & People Development</div>
     </div>

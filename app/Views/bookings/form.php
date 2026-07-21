@@ -56,9 +56,9 @@
                                    placeholder="Cth: Unit LPD, Divisi SDM">
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Agenda <span class="text-danger">*</span></label>
+                            <label class="form-label">Keperluan / Tujuan <span class="text-danger">*</span></label>
                             <textarea name="keperluan" class="form-control" rows="2" required
-                                      placeholder="Jelaskan agenda penggunaan ruangan..."><?= esc(old('keperluan', $booking['keperluan'] ?? '')) ?></textarea>
+                                      placeholder="Jelaskan keperluan penggunaan ruangan..."><?= esc(old('keperluan', $booking['keperluan'] ?? '')) ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -150,14 +150,27 @@
                 <div class="form-section">
                     <div class="form-section-title"><i class="bi bi-cup-hot-fill"></i>Konsumsi</div>
                     <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Kebutuhan Konsumsi</label>
-                            <select name="konsumsi" class="form-select">
+                        <div class="col-12">
+                            <label class="form-label d-block mb-2">Kebutuhan Konsumsi</label>
+                            <div class="konsumsi-options">
+                                <?php
+                                    $oldKonsumsi = old('konsumsi');
+                                    if ($oldKonsumsi !== null) {
+                                        $selectedKonsumsi = is_array($oldKonsumsi) ? $oldKonsumsi : array_filter(array_map('trim', explode(',', $oldKonsumsi)));
+                                    } else {
+                                        $stored = $booking['konsumsi'] ?? '';
+                                        $selectedKonsumsi = $stored ? array_filter(array_map('trim', explode(',', $stored))) : [];
+                                    }
+                                ?>
                                 <?php foreach ($konsumsiOptions as $val => $label): ?>
-                                <option value="<?= esc($val) ?>" <?= (old('konsumsi', $booking['konsumsi'] ?? '') == $val) ? 'selected' : '' ?>><?= esc($label) ?></option>
+                                <label class="konsumsi-option <?= in_array($val, $selectedKonsumsi) ? 'active' : '' ?>">
+                                    <input type="checkbox" name="konsumsi[]" value="<?= esc($val) ?>"
+                                           <?= in_array($val, $selectedKonsumsi) ? 'checked' : '' ?>>
+                                    <span><?= esc($label) ?></span>
+                                </label>
                                 <?php endforeach; ?>
-                            </select>
-                            <div class="form-text">Pilih jika membutuhkan konsumsi untuk acara ini.</div>
+                            </div>
+                            <div class="form-text">Bisa pilih lebih dari satu. Kosongkan jika tidak membutuhkan konsumsi.</div>
                         </div>
                     </div>
                     <div class="form-section-title"><i class="bi bi-chat-text-fill"></i>Catatan</div>
@@ -196,5 +209,11 @@
     }
     roomSelect.addEventListener('change', updateRoomInfo);
     updateRoomInfo();
+
+    document.querySelectorAll('.konsumsi-option input[type="checkbox"]').forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            checkbox.closest('.konsumsi-option').classList.toggle('active', checkbox.checked);
+        });
+    });
 </script>
 <?= $this->endSection() ?>
