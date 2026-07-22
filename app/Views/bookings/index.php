@@ -42,12 +42,14 @@
                 <tr>
                     <th>#</th>
                     <th>Peminjam</th>
+                    <th>Unit Peminjam</th>
                     <th>Ruangan</th>
                     <th>Keperluan</th>
                     <th>Tanggal</th>
                     <th>Jam</th>
                     <th class="text-center">Peserta</th>
                     <th>Konsumsi</th>
+                    <th>Penanggung Biaya</th>
                     <th class="text-center">Status</th>
                     <th class="text-center">Aksi</th>
                 </tr>
@@ -58,10 +60,8 @@
                     <td class="text-muted" style="font-size:.8rem"><?= $i+1 ?></td>
                     <td>
                         <div class="fw-semibold" style="font-size:.85rem"><?= esc($b['nama_peminjam']) ?></div>
-                        <?php if ($b['instansi']): ?>
-                        <div class="text-muted" style="font-size:.75rem"><?= esc($b['instansi']) ?></div>
-                        <?php endif; ?>
                     </td>
+                    <td class="text-muted" style="font-size:.82rem"><?= $b['instansi'] ? esc($b['instansi']) : '-' ?></td>
                     <td>
                         <div style="font-size:.85rem"><?= esc($b['nama_ruangan']) ?></div>
                         <div class="text-muted" style="font-size:.75rem"><?= esc($b['kode_ruangan']) ?></div>
@@ -76,6 +76,15 @@
                     <td style="font-size:.82rem"><?= substr($b['jam_mulai'],0,5) ?>–<?= substr($b['jam_selesai'],0,5) ?></td>
                     <td class="text-center" style="font-size:.85rem"><?= $b['jumlah_peserta'] ?></td>
                     <td style="font-size:.8rem" class="text-muted"><?= $b['konsumsi'] ? esc($b['konsumsi']) : '-' ?></td>
+                    <td style="font-size:.82rem">
+                        <?php if ($b['penanggung_biaya']): ?>
+                        <span class="badge px-2" style="background:#f3f6f4;color:#374151;font-size:.72rem">
+                            <?= $b['penanggung_biaya'] === 'pusdiklat' ? 'Pusdiklat' : 'Unit Peminjam' ?>
+                        </span>
+                        <?php else: ?>
+                        <span class="text-muted">-</span>
+                        <?php endif; ?>
+                    </td>
                     <td class="text-center">
                         <?php
                         $sm = ['pending'=>['Menunggu','badge-pending'],'approved'=>['Disetujui','badge-approved'],'rejected'=>['Ditolak','badge-rejected'],'cancelled'=>['Batal','badge-cancelled'],'selesai'=>['Selesai','badge-selesai']];
@@ -110,7 +119,7 @@
                 <?php endforeach; ?>
                 <?php if (empty($bookings)): ?>
                 <tr>
-                    <td colspan="10" class="text-center py-5 text-muted">
+                    <td colspan="12" class="text-center py-5 text-muted">
                         <i class="bi bi-calendar-x d-block fs-1 mb-2 opacity-25"></i>
                         Tidak ada data booking
                     </td>

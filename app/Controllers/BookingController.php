@@ -97,6 +97,7 @@ class BookingController extends BaseController
     public function store()
     {
         $rules = [
+            'nama_peminjam'   => 'required|max_length[100]',
             'room_id'         => 'required|integer',
             'keperluan'       => 'required',
             'tanggal_mulai'   => 'required|valid_date[Y-m-d]',
@@ -123,7 +124,7 @@ class BookingController extends BaseController
         $data = [
             'room_id'         => $this->request->getPost('room_id'),
             'user_id'         => session()->get('user_id'),
-            'nama_peminjam'   => session()->get('nama'),
+            'nama_peminjam'   => $this->request->getPost('nama_peminjam'),
             'instansi'        => $this->request->getPost('instansi'),
             'keperluan'       => $this->request->getPost('keperluan'),
             'tanggal_mulai'   => $this->request->getPost('tanggal_mulai'),
@@ -226,6 +227,7 @@ class BookingController extends BaseController
         }
 
         $rules = [
+            'nama_peminjam'   => 'required|max_length[100]',
             'room_id'         => 'required|integer',
             'keperluan'       => 'required',
             'tanggal_mulai'   => 'required|valid_date[Y-m-d]',
@@ -251,6 +253,7 @@ class BookingController extends BaseController
 
         $data = [
             'room_id'         => $this->request->getPost('room_id'),
+            'nama_peminjam'   => $this->request->getPost('nama_peminjam'),
             'instansi'        => $this->request->getPost('instansi'),
             'keperluan'       => $this->request->getPost('keperluan'),
             'tanggal_mulai'   => $this->request->getPost('tanggal_mulai'),
@@ -305,6 +308,37 @@ class BookingController extends BaseController
 
         $this->bookingModel->update($id, ['status' => 'rejected']);
         return redirect()->to(base_url("bookings/{$id}"))->with('success', 'Booking telah ditolak.');
+    }
+
+    /**
+     * Admin mengonfirmasi biaya konsumsi & pihak yang menanggung.
+     * Hanya bisa dilakukan selama status booking masih 'pending' (menunggu).
+     */
+    public function confirmKonsumsi(int $id)
+    {
+        $booking = $this->bookingModel->find($id);
+        if (!$booking) {
+            return redirect()->to(base_url('bookings'))->with('error', 'Booking tidak ditemukan.');
+        }
+
+        if ($booking['status'] !== 'pending') {
+            return redirect()->to(base_url("bookings/{$id}"))
+                ->with('error', 'Penanggung biaya hanya dapat dikonfirmasi selama booking berstatus Menunggu.');
+        }
+
+        $rules = [
+            'penanggung_biaya' => 'permit_empty|in_list[pusdiklat,unit_peminjam]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->to(base_url("bookings/{$id}"))->with('error', 'Penanggung biaya tidak valid.');
+        }
+
+        $this->bookingModel->update($id, [
+            'penanggung_biaya' => $this->request->getPost('penanggung_biaya') ?: null,
+        ]);
+
+        return redirect()->to(base_url("bookings/{$id}"))->with('success', 'Penanggung biaya berhasil dikonfirmasi.');
     }
 
     public function cancel(int $id)

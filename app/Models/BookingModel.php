@@ -13,7 +13,8 @@ class BookingModel extends Model
     protected $allowedFields = [
         'room_id', 'user_id', 'nama_peminjam', 'instansi', 'keperluan',
         'tanggal_mulai', 'tanggal_selesai', 'jam_mulai', 'jam_selesai',
-        'jumlah_peserta', 'konsumsi', 'status', 'catatan',
+        'jumlah_peserta', 'konsumsi', 'biaya_konsumsi', 'penanggung_biaya',
+        'status', 'catatan',
     ];
 
     protected $useTimestamps = true;

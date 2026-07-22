@@ -32,6 +32,7 @@ $routes->get('bookings/edit/(:num)', 'BookingController::edit/$1');
 $routes->post('bookings/update/(:num)', 'BookingController::update/$1');
 $routes->post('bookings/approve/(:num)', 'BookingController::approve/$1', ['filter' => 'adminOnly']);
 $routes->post('bookings/reject/(:num)', 'BookingController::reject/$1', ['filter' => 'adminOnly']);
+$routes->post('bookings/confirm-konsumsi/(:num)', 'BookingController::confirmKonsumsi/$1', ['filter' => 'adminOnly']);
 $routes->post('bookings/cancel/(:num)', 'BookingController::cancel/$1');
 $routes->post('bookings/selesai/(:num)', 'BookingController::selesai/$1', ['filter' => 'adminOnly']);
 

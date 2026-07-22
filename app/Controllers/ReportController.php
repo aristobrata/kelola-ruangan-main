@@ -67,6 +67,13 @@ class ReportController extends BaseController
         ];
     }
 
+    /** Label penanggung biaya. Nama unit/instansi sudah ada di kolom 'Instansi' tersendiri. */
+    protected function formatPenanggung(array $booking): string
+    {
+        $labels = ['pusdiklat' => 'Pusdiklat', 'unit_peminjam' => 'Unit Peminjam'];
+        return $labels[$booking['penanggung_biaya']] ?? '-';
+    }
+
     /**
      * Halaman laporan: tampilkan filter + pratinjau data + tombol export.
      */
@@ -95,7 +102,8 @@ class ReportController extends BaseController
         $headers = [
             'No', 'Kode Ruangan', 'Ruangan', 'Peminjam', 'Instansi', 'Keperluan',
             'Tanggal Mulai', 'Tanggal Selesai', 'Jam Mulai', 'Jam Selesai',
-            'Jumlah Peserta', 'Konsumsi', 'Status', 'Catatan', 'Dibuat Pada',
+            'Jumlah Peserta', 'Konsumsi', 'Penanggung Biaya',
+            'Status', 'Catatan', 'Dibuat Pada',
         ];
 
         $rows = [];
@@ -113,13 +121,14 @@ class ReportController extends BaseController
                 substr($b['jam_selesai'], 0, 5),
                 (int) $b['jumlah_peserta'],
                 $b['konsumsi'] ?? '-',
+                $this->formatPenanggung($b),
                 $this->statusLabels[$b['status']] ?? $b['status'],
                 $b['catatan'] ?? '-',
                 $b['created_at'] ? date('d-m-Y H:i', strtotime($b['created_at'])) : '-',
             ];
         }
 
-        $columnWidths = [5, 14, 20, 20, 20, 28, 14, 14, 11, 11, 10, 18, 12, 25, 18];
+        $columnWidths = [5, 14, 20, 20, 20, 28, 14, 14, 11, 11, 10, 18, 16, 12, 25, 18];
 
         $filenameParts = ['Laporan-Booking'];
         $filters = $this->getFilters();

@@ -45,11 +45,11 @@ $statusCfg = [
                     <div class="text-muted small mb-1">Instansi / Unit Kerja</div>
                     <div class="fw-semibold"><?= esc($booking['instansi'] ?: '-') ?></div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="text-muted small mb-1">Keperluan</div>
                     <div class="fw-semibold"><?= nl2br(esc($booking['keperluan'])) ?></div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="text-muted small mb-1">Jumlah Peserta</div>
                     <div class="fw-semibold"><?= $booking['jumlah_peserta'] ?> orang</div>
                 </div>
@@ -82,7 +82,51 @@ $statusCfg = [
         <?php if (!empty($booking['konsumsi'])): ?>
         <div class="form-section mb-3">
             <div class="form-section-title"><i class="bi bi-cup-hot-fill"></i>Konsumsi</div>
-            <p class="mb-0 text-muted"><?= esc($booking['konsumsi']) ?></p>
+            <p class="mb-3 text-muted"><?= esc($booking['konsumsi']) ?></p>
+
+            <?php if (is_admin_role() && $booking['status'] === 'pending'): ?>
+            <hr class="my-3">
+            <div class="fw-semibold mb-2" style="font-size:.85rem">
+                <i class="bi bi-cash-coin me-1" style="color:#8b1a24"></i>Konfirmasi Penanggung Biaya
+            </div>
+            <form method="post" action="<?= base_url("bookings/confirm-konsumsi/{$booking['id']}") ?>">
+                <?= csrf_field() ?>
+                <div class="row g-3 align-items-end">
+                    <div class="col-sm-8">
+                        <label class="form-label small mb-1 d-block">Penanggung Biaya</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="penanggung_biaya" id="pusdiklat" value="pusdiklat"
+                                       <?= ($booking['penanggung_biaya'] ?? '') === 'pusdiklat' ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="pusdiklat" style="font-size:.85rem">Pusdiklat</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="penanggung_biaya" id="unit_peminjam" value="unit_peminjam"
+                                       <?= ($booking['penanggung_biaya'] ?? '') === 'unit_peminjam' ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="unit_peminjam" style="font-size:.85rem">Unit Peminjam</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="bi bi-check-lg me-1"></i>Simpan
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <?php elseif ($booking['penanggung_biaya']): ?>
+            <hr class="my-3">
+            <div class="text-muted small mb-1">Penanggung Biaya</div>
+            <div class="fw-semibold">
+                <?= $booking['penanggung_biaya'] === 'pusdiklat' ? 'Pusdiklat' : 'Unit Peminjam' ?>
+                <?php if ($booking['penanggung_biaya'] === 'unit_peminjam' && $booking['instansi']): ?>
+                <span class="text-muted fw-normal">(<?= esc($booking['instansi']) ?>)</span>
+                <?php endif; ?>
+            </div>
+            <?php elseif ($booking['status'] === 'pending'): ?>
+            <hr class="my-3">
+            <div class="text-muted" style="font-size:.8rem"><i class="bi bi-hourglass-split me-1"></i>Penanggung biaya belum dikonfirmasi admin.</div>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
 

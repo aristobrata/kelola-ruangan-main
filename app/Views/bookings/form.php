@@ -45,9 +45,10 @@
                     <div class="form-section-title"><i class="bi bi-person-fill"></i>Informasi Peminjam</div>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Nama Peminjam</label>
-                            <input type="text" class="form-control" value="<?= esc($booking['nama_peminjam'] ?? session()->get('nama')) ?>" disabled>
-                            <div class="form-text">Otomatis diambil dari akun Anda yang sedang login.</div>
+                            <label class="form-label">Nama Peminjam <span class="text-danger">*</span></label>
+                            <input type="text" name="nama_peminjam" class="form-control"
+                                   value="<?= esc(old('nama_peminjam', $booking['nama_peminjam'] ?? session()->get('nama'))) ?>"
+                                   placeholder="Nama lengkap peminjam" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Instansi / Unit Kerja</label>
