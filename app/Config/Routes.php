@@ -40,6 +40,10 @@ $routes->post('bookings/selesai/(:num)', 'BookingController::selesai/$1', ['filt
 $routes->get('reports/bookings', 'ReportController::bookings', ['filter' => 'adminOnly']);
 $routes->get('reports/bookings/export', 'ReportController::exportExcel', ['filter' => 'adminOnly']);
 
+// Profil — setiap user yang login bisa mengubah password akunnya sendiri.
+$routes->get('profile', 'ProfileController::edit');
+$routes->post('profile/update-password', 'ProfileController::updatePassword');
+
 // Users — manajemen akun (admin & pembooking), khusus admin.
 $routes->get('users', 'UserController::index', ['filter' => 'adminOnly']);
 $routes->get('users/create', 'UserController::create', ['filter' => 'adminOnly']);

@@ -189,35 +189,56 @@
         /* ── STAT CARDS ── */
         .stat-card {
             background: #fff;
-            border-radius: 16px;
-            padding: 1.25rem;
+            border-radius: 14px;
+            padding: 1.1rem 1.15rem;
             border: 1px solid #e8ede9;
             height: 100%;
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: .75rem;
             transition: box-shadow .2s, transform .2s;
         }
         .stat-card:hover { box-shadow: 0 8px 30px rgba(107,15,22,.1); transform: translateY(-2px); }
         .stat-card::before {
             content: '';
             position: absolute;
-            top: 0; right: 0;
-            width: 80px; height: 80px;
-            border-radius: 50%;
-            transform: translate(25%, -25%);
-            opacity: .06;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            border-radius: 4px 0 0 4px;
         }
-        .stat-card.green::before  { background: #8b1a24; }
+        .stat-card.green::before  { background: #16a34a; }
         .stat-card.orange::before { background: #d97706; }
         .stat-card.blue::before   { background: #2563eb; }
         .stat-card.red::before    { background: #dc2626; }
+        .stat-card.pink::before   { background: #be185d; }
+
+        .stat-body { min-width: 0; }
+        .stat-kicker {
+            font-size: .66rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .05em; color: #8b1a24; margin-bottom: .3rem;
+        }
+        .stat-title { font-size: .82rem; font-weight: 600; color: #4b5563; margin-bottom: .55rem; }
+        .stat-value { font-size: 1.85rem; font-weight: 800; color: #1a2e1e; line-height: 1; }
+        .stat-label { font-size: .78rem; color: #6b7280; font-weight: 500; margin-top: .3rem; }
+
+        .stat-progress-track {
+            height: 5px; border-radius: 3px; background: #f0f0ee;
+            margin-top: .65rem; overflow: hidden;
+        }
+        .stat-progress-fill { height: 100%; border-radius: 3px; }
+        .stat-progress-fill.green  { background: #16a34a; }
+        .stat-progress-fill.orange { background: #d97706; }
+        .stat-progress-note { font-size: .68rem; color: #9ca3af; margin-top: .3rem; text-align: right; }
 
         .stat-icon {
-            width: 48px; height: 48px;
-            border-radius: 12px;
+            width: 52px; height: 52px;
+            border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            flex-shrink: 0;
         }
         .stat-icon.green  { background: #dcfce7; color: #16a34a; }
         .stat-icon.orange { background: #fef3c7; color: #d97706; }
@@ -225,9 +246,6 @@
         .stat-icon.red    { background: #fee2e2; color: #dc2626; }
         .stat-icon.purple { background: #ede9fe; color: #7c3aed; }
         .stat-icon.pink   { background: #fce7f3; color: #be185d; }
-
-        .stat-value { font-size: 2rem; font-weight: 800; color: #1a2e1e; line-height: 1; }
-        .stat-label { font-size: .8rem; color: #6b7280; font-weight: 500; margin-top: .25rem; }
 
         /* ── CARDS ── */
         .section-card {
@@ -471,6 +489,9 @@
                 <div class="user-name"><?= esc(session()->get('nama') ?? 'Pengguna') ?></div>
                 <div class="user-role"><?= strtoupper(role_label(session()->get('role'))) ?></div>
             </div>
+            <a href="<?= base_url('profile') ?>" class="logout-btn" style="margin-left:auto" title="Akun Saya / Ubah Password">
+                <i class="bi bi-gear-fill"></i>
+            </a>
             <a href="<?= base_url('logout') ?>" class="logout-btn" title="Keluar">
                 <i class="bi bi-box-arrow-right"></i>
             </a>
