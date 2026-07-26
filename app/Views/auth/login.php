@@ -183,7 +183,7 @@
                 </span>
                 <input type="text" name="username" class="form-control"
                        placeholder="Masukkan username"
-                       value="<?= esc(old('username')) ?>" required
+                       value="<?= esc(session()->getFlashdata('old_username') ?? '') ?>" required
                        style="border-left:none; border-radius:0 10px 10px 0">
             </div>
         </div>

@@ -23,12 +23,22 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Username dan password wajib diisi.');
         }
 
+        // Batasi percobaan login per alamat IP untuk mencegah brute-force.
+        // Maksimal 10 percobaan per menit (rate: 10 token, isi ulang tiap 60 detik).
+        $throttler = \Config\Services::throttler();
+        if ($throttler->check(md5($this->request->getIPAddress()), 10, 60) === false) {
+            return redirect()->back()->with('error', 'Terlalu banyak percobaan login. Silakan coba lagi dalam beberapa saat.');
+        }
+
         $userModel = new UserModel();
         $user = $userModel->where('username', $username)->first();
 
         if (!$user || !password_verify($password, $user['password'])) {
-            return redirect()->back()->withInput()->with('error', 'Username atau password salah.');
+            return redirect()->back()->with('old_username', $username)->with('error', 'Username atau password salah.');
         }
+
+        // Regenerasi session ID setelah login berhasil untuk mencegah session fixation.
+        session()->regenerate();
 
         session()->set([
             'logged_in' => true,
