@@ -44,13 +44,19 @@
                 <div class="form-section">
                     <div class="form-section-title"><i class="bi bi-person-fill"></i>Informasi Peminjam</div>
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label">Nama Peminjam <span class="text-danger">*</span></label>
                             <input type="text" name="nama_peminjam" class="form-control"
                                    value="<?= esc(old('nama_peminjam', $booking['nama_peminjam'] ?? session()->get('nama'))) ?>"
                                    placeholder="Nama lengkap peminjam" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label class="form-label">Kontak (No. HP/WhatsApp) <span class="text-danger">*</span></label>
+                            <input type="text" name="kontak" class="form-control"
+                                   value="<?= esc(old('kontak', $booking['kontak'] ?? '')) ?>"
+                                   placeholder="Cth: 081234567890" required>
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label">Instansi / Unit Kerja</label>
                             <input type="text" name="instansi" class="form-control"
                                    value="<?= esc(old('instansi', $booking['instansi'] ?? '')) ?>"

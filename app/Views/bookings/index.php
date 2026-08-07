@@ -60,6 +60,9 @@
                     <td class="text-muted" style="font-size:.8rem"><?= $i+1 ?></td>
                     <td>
                         <div class="fw-semibold" style="font-size:.85rem"><?= esc($b['nama_peminjam']) ?></div>
+                        <?php if (!empty($b['kontak'])): ?>
+                        <div class="text-muted" style="font-size:.72rem"><i class="bi bi-telephone me-1"></i><?= esc($b['kontak']) ?></div>
+                        <?php endif; ?>
                     </td>
                     <td class="text-muted" style="font-size:.82rem"><?= $b['instansi'] ? esc($b['instansi']) : '-' ?></td>
                     <td>

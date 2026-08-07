@@ -1,0 +1,15 @@
+CRITICAL - 2026-08-07 08:40:25 --> ErrorException: Undefined array key "kontak"
+[Method: GET, Route: bookings/21]
+in APPPATH\Views\bookings\show.php on line 46.
+ 1 APPPATH\Views\bookings\show.php(46): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "kontak"', 'C:\\xampp\\htdocs\\kelola-ruangan-main\\app\\Views\\bookings\\show.php', 46)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\xampp\\htdocs\\kelola-ruangan-main\\app\\Views\\bookings\\show.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('bookings/show', [], true)
+ 5 APPPATH\Controllers\BookingController.php(187): view('bookings/show', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\BookingController->show(21)
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\BookingController))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\kelola-ruangan-main\\public\\index.php')

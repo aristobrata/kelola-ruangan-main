@@ -100,7 +100,7 @@ class ReportController extends BaseController
         $bookings = $this->getFilteredBookings();
 
         $headers = [
-            'No', 'Kode Ruangan', 'Ruangan', 'Peminjam', 'Instansi', 'Keperluan',
+            'No', 'Kode Ruangan', 'Ruangan', 'Peminjam', 'Kontak', 'Instansi', 'Keperluan',
             'Tanggal Mulai', 'Tanggal Selesai', 'Jam Mulai', 'Jam Selesai',
             'Jumlah Peserta', 'Konsumsi', 'Penanggung Biaya',
             'Status', 'Catatan', 'Dibuat Pada',
@@ -113,6 +113,7 @@ class ReportController extends BaseController
                 $b['kode_ruangan'],
                 $b['nama_ruangan'],
                 $b['nama_peminjam'],
+                $b['kontak'] ?? '-',
                 $b['instansi'] ?? '-',
                 $b['keperluan'],
                 date('d-m-Y', strtotime($b['tanggal_mulai'])),
@@ -128,7 +129,7 @@ class ReportController extends BaseController
             ];
         }
 
-        $columnWidths = [5, 14, 20, 20, 20, 28, 14, 14, 11, 11, 10, 18, 16, 12, 25, 18];
+        $columnWidths = [5, 14, 20, 20, 15, 20, 28, 14, 14, 11, 11, 10, 18, 16, 12, 25, 18];
 
         $filenameParts = ['Laporan-Booking'];
         $filters = $this->getFilters();

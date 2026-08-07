@@ -37,19 +37,23 @@ $statusCfg = [
         <div class="form-section mb-3">
             <div class="form-section-title"><i class="bi bi-person-fill"></i>Informasi Peminjam</div>
             <div class="row g-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="text-muted small mb-1">Nama Peminjam</div>
                     <div class="fw-semibold"><?= esc($booking['nama_peminjam']) ?></div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <div class="text-muted small mb-1">Kontak</div>
+                    <div class="fw-semibold"><?= esc($booking['kontak'] ?: '-') ?></div>
+                </div>
+                <div class="col-md-4">
                     <div class="text-muted small mb-1">Instansi / Unit Kerja</div>
                     <div class="fw-semibold"><?= esc($booking['instansi'] ?: '-') ?></div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="text-muted small mb-1">Keperluan</div>
                     <div class="fw-semibold"><?= nl2br(esc($booking['keperluan'])) ?></div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="text-muted small mb-1">Jumlah Peserta</div>
                     <div class="fw-semibold"><?= $booking['jumlah_peserta'] ?> orang</div>
                 </div>
@@ -138,12 +142,21 @@ $statusCfg = [
         <?php endif; ?>
 
         <!-- Action Buttons -->
+        <?php $needsPenanggung = $booking['status'] === 'pending' && !empty($booking['konsumsi']) && empty($booking['penanggung_biaya']); ?>
+        <?php if ($needsPenanggung && is_admin_role()): ?>
+        <div class="alert alert-warning d-flex align-items-center gap-2 mb-3" style="font-size:.85rem">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            Booking ini memilih konsumsi. Konfirmasi &amp; simpan <strong class="mx-1">Penanggung Biaya</strong> di atas terlebih dahulu sebelum bisa menyetujui.
+        </div>
+        <?php endif; ?>
         <div class="d-flex flex-wrap gap-2">
             <?php if ($booking['status'] === 'pending'): ?>
             <?php if (is_admin_role()): ?>
             <form method="post" action="<?= base_url("bookings/approve/{$booking['id']}") ?>">
                 <?= csrf_field() ?>
-                <button class="btn btn-success"><i class="bi bi-check-circle me-1"></i>Setujui</button>
+                <button class="btn btn-success" <?= $needsPenanggung ? 'disabled title="Konfirmasi Penanggung Biaya terlebih dahulu"' : '' ?>>
+                    <i class="bi bi-check-circle me-1"></i>Setujui
+                </button>
             </form>
             <form method="post" action="<?= base_url("bookings/reject/{$booking['id']}") ?>">
                 <?= csrf_field() ?>

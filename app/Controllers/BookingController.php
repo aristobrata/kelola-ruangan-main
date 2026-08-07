@@ -98,6 +98,7 @@ class BookingController extends BaseController
     {
         $rules = [
             'nama_peminjam'   => 'required|max_length[100]',
+            'kontak'          => 'required|max_length[30]',
             'room_id'         => 'required|integer',
             'keperluan'       => 'required',
             'tanggal_mulai'   => 'required|valid_date[Y-m-d]',
@@ -125,6 +126,7 @@ class BookingController extends BaseController
             'room_id'         => $this->request->getPost('room_id'),
             'user_id'         => session()->get('user_id'),
             'nama_peminjam'   => $this->request->getPost('nama_peminjam'),
+            'kontak'          => $this->request->getPost('kontak'),
             'instansi'        => $this->request->getPost('instansi'),
             'keperluan'       => $this->request->getPost('keperluan'),
             'tanggal_mulai'   => $this->request->getPost('tanggal_mulai'),
@@ -228,6 +230,7 @@ class BookingController extends BaseController
 
         $rules = [
             'nama_peminjam'   => 'required|max_length[100]',
+            'kontak'          => 'required|max_length[30]',
             'room_id'         => 'required|integer',
             'keperluan'       => 'required',
             'tanggal_mulai'   => 'required|valid_date[Y-m-d]',
@@ -254,6 +257,7 @@ class BookingController extends BaseController
         $data = [
             'room_id'         => $this->request->getPost('room_id'),
             'nama_peminjam'   => $this->request->getPost('nama_peminjam'),
+            'kontak'          => $this->request->getPost('kontak'),
             'instansi'        => $this->request->getPost('instansi'),
             'keperluan'       => $this->request->getPost('keperluan'),
             'tanggal_mulai'   => $this->request->getPost('tanggal_mulai'),
@@ -293,6 +297,13 @@ class BookingController extends BaseController
         $booking = $this->bookingModel->find($id);
         if (!$booking || $booking['status'] !== 'pending') {
             return redirect()->to(base_url('bookings'))->with('error', 'Booking tidak dapat disetujui.');
+        }
+
+        // Jika peminjam memilih konsumsi, penanggung biaya wajib dikonfirmasi & disimpan
+        // terlebih dahulu sebelum booking bisa disetujui.
+        if (!empty($booking['konsumsi']) && empty($booking['penanggung_biaya'])) {
+            return redirect()->to(base_url("bookings/{$id}"))
+                ->with('error', 'Booking ini memilih konsumsi — konfirmasi & simpan Penanggung Biaya terlebih dahulu sebelum menyetujui.');
         }
 
         $this->bookingModel->update($id, ['status' => 'approved']);

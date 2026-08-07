@@ -11,7 +11,7 @@ class BookingModel extends Model
     protected $returnType = 'array';
 
     protected $allowedFields = [
-        'room_id', 'user_id', 'nama_peminjam', 'instansi', 'keperluan',
+        'room_id', 'user_id', 'nama_peminjam', 'kontak', 'instansi', 'keperluan',
         'tanggal_mulai', 'tanggal_selesai', 'jam_mulai', 'jam_selesai',
         'jumlah_peserta', 'konsumsi', 'biaya_konsumsi', 'penanggung_biaya',
         'status', 'catatan',

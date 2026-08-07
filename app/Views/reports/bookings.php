@@ -75,7 +75,12 @@
                         <div class="fw-semibold"><?= esc($b['nama_ruangan']) ?></div>
                         <div class="text-muted" style="font-size:.75rem"><?= esc($b['kode_ruangan']) ?></div>
                     </td>
-                    <td class="fw-medium" style="font-size:.85rem"><?= esc($b['nama_peminjam']) ?></td>
+                    <td class="fw-medium" style="font-size:.85rem">
+                        <?= esc($b['nama_peminjam']) ?>
+                        <?php if (!empty($b['kontak'])): ?>
+                        <div class="text-muted fw-normal" style="font-size:.72rem"><i class="bi bi-telephone me-1"></i><?= esc($b['kontak']) ?></div>
+                        <?php endif; ?>
+                    </td>
                     <td class="text-muted" style="font-size:.82rem"><?= $b['instansi'] ? esc($b['instansi']) : '-' ?></td>
                     <td class="text-muted" style="font-size:.82rem"><?= esc(mb_strimwidth($b['keperluan'], 0, 35, '...')) ?></td>
                     <td style="font-size:.82rem"><?= date('d M Y', strtotime($b['tanggal_mulai'])) ?></td>
