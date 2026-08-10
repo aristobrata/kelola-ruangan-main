@@ -112,7 +112,7 @@ class Filters extends BaseFilters
      */
     public array $filters = [
         'auth' => [
-            'before' => ['/', 'rooms*', 'bookings*', 'users*', 'profile*'],
+            'before' => ['/', 'rooms*', 'bookings*', 'users*', 'profile*', 'jadwal*'],
         ],
     ];
 }

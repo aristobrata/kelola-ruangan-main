@@ -15,6 +15,7 @@ $routes->get('/', 'Dashboard::index');
 // Rooms — melihat data ruangan bisa diakses admin & user (pembooking),
 // mengelola (tambah/ubah/hapus) hanya untuk admin.
 $routes->get('rooms', 'RoomController::index');
+$routes->get('jadwal', 'ScheduleController::index');
 $routes->get('rooms/create', 'RoomController::create', ['filter' => 'adminOnly']);
 $routes->post('rooms/store', 'RoomController::store', ['filter' => 'adminOnly']);
 $routes->get('rooms/(:num)', 'RoomController::show/$1');

@@ -341,6 +341,88 @@
             box-shadow: 0 0 0 3px rgba(139,26,36,.1);
         }
 
+        /* ── PANTAU JADWAL (SCHEDULE) ── */
+        .sched-tabs {
+            display: flex; background: #f3f6f4; border-radius: 8px; padding: 3px;
+        }
+        .sched-tab {
+            padding: .4rem .9rem; font-size: .82rem; font-weight: 600; color: #6b7280;
+            border-radius: 6px; text-decoration: none;
+        }
+        .sched-tab.active { background: #fff; color: #8b1a24; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+
+        .sched-mini-nav {
+            width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            color: #6b7280; text-decoration: none; background: #f3f6f4; flex-shrink: 0;
+        }
+        .sched-mini-nav:hover { background: #e8ede9; color: #8b1a24; }
+
+        .sched-mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+        .sched-mini-dl { font-size: .68rem; color: #9ca3af; font-weight: 700; padding: 2px 0; }
+        .sched-mini-day {
+            font-size: .78rem; padding: 5px 0; border-radius: 6px; color: #374151; text-decoration: none;
+        }
+        .sched-mini-day:hover { background: #f3f6f4; }
+        .sched-mini-day.is-today { background: #fef3c7; color: #d97706; font-weight: 700; }
+        .sched-mini-day.is-selected { background: #8b1a24; color: #fff; font-weight: 700; }
+
+        .sched-room-list { max-height: 260px; overflow-y: auto; }
+        .sched-room-item { display: flex; align-items: center; gap: .4rem; padding: .3rem 0; font-size: .82rem; cursor: pointer; }
+        .sched-room-item input { accent-color: #8b1a24; }
+
+        /* Grid waktu (harian/mingguan) */
+        .sched-timegrid { display: flex; overflow-x: auto; }
+        .sched-axis { position: relative; width: 52px; flex-shrink: 0; }
+        .sched-axis-label { position: absolute; font-size: .68rem; color: #9ca3af; white-space: nowrap; }
+        .sched-days { display: grid; flex: 1; min-width: 500px; }
+        .sched-day-col { border-left: 1px solid #f0ede9; }
+        .sched-day-header {
+            text-align: center; font-size: .72rem; font-weight: 700; color: #6b7280;
+            text-transform: uppercase; padding: .4rem 0; border-bottom: 1px solid #f0ede9;
+        }
+        .sched-day-header.is-today { color: #8b1a24; }
+        .sched-day-num { font-size: .95rem; font-weight: 700; color: #1a2e1e; }
+        .sched-day-header.is-today .sched-day-num { color: #8b1a24; }
+        .sched-day-body { position: relative; background: #fff; }
+        .sched-day-body.is-today { background: #fefaf5; }
+        .sched-gridline { position: absolute; left: 0; right: 0; border-top: 1px solid #f3f1ee; }
+        .sched-subcols { position: absolute; inset: 0; display: flex; }
+        .sched-subcol { flex: 1; position: relative; border-left: 1px dashed #f5f2ef; }
+        .sched-subcol:first-child { border-left: none; }
+        .sched-block {
+            position: absolute; left: 2px; right: 2px; border-radius: 5px; padding: 3px 5px;
+            overflow: hidden; text-decoration: none; display: block; box-shadow: 0 1px 2px rgba(0,0,0,.12);
+        }
+        .sched-block .sb-title { font-size: .68rem; font-weight: 700; color: #fff; line-height: 1.2; }
+        .sched-block .sb-room { font-size: .62rem; color: rgba(255,255,255,.85); line-height: 1.1; }
+        .sched-block-ongoing { background: #dc2626; }
+        .sched-block-pending { background: #d97706; }
+        .sched-block-booked  { background: #16a34a; }
+
+        /* Grid bulanan */
+        .sched-month-head {
+            display: grid; grid-template-columns: repeat(7, 1fr); text-align: center;
+            font-size: .72rem; font-weight: 700; color: #6b7280; text-transform: uppercase; padding-bottom: .5rem;
+        }
+        .sched-month-row { display: grid; grid-template-columns: repeat(7, 1fr); }
+        .sched-month-cell {
+            border: 1px solid #f3f1ee; min-height: 78px; padding: .4rem; text-decoration: none;
+            display: block; color: inherit;
+        }
+        .sched-month-cell:hover { background: #fbf8f7; }
+        .sched-month-cell.is-muted { color: #c9c2be; background: #fbfaf9; }
+        .sched-month-cell.is-today { background: #fef3c7; }
+        .sched-month-daynum { font-size: .82rem; font-weight: 700; margin-bottom: .3rem; }
+        .sched-month-badge {
+            font-size: .65rem; font-weight: 700; color: #fff; border-radius: 4px; padding: 2px 5px; display: inline-block;
+        }
+        .sched-month-badge.all-confirmed { background: #16a34a; }
+        .sched-month-badge.has-pending   { background: #d97706; }
+
+        .sched-legend-item { display: flex; align-items: center; gap: .4rem; font-size: .78rem; color: #6b7280; }
+        .sched-dot { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+        .sched-dot-empty { background: #fff; border: 1.5px solid #d9d4d0; }
+
         /* ── KONSUMSI RADIO OPTIONS ── */
         .konsumsi-options {
             display: flex;
@@ -440,6 +522,11 @@
         <a href="<?= base_url('rooms') ?>" class="nav-link-item <?= str_starts_with(uri_string(), 'rooms') ? 'active' : '' ?>">
             <span class="nav-icon"><i class="bi bi-door-open-fill"></i></span>
             Data Ruangan
+        </a>
+
+        <a href="<?= base_url('jadwal') ?>" class="nav-link-item <?= str_starts_with(uri_string(), 'jadwal') ? 'active' : '' ?>">
+            <span class="nav-icon"><i class="bi bi-calendar3-week"></i></span>
+            Pantau Jadwal
         </a>
 
         <div class="nav-section-label">Pemesanan</div>
