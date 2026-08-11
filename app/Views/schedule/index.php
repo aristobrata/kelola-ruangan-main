@@ -36,17 +36,63 @@ if ($view === 'harian') {
     $periodLabel = $bulanID[(int) date('n', strtotime($date)) - 1] . ' ' . date('Y', strtotime($date));
 }
 
-// Kelompokkan booking per tanggal+ruangan untuk tampilan harian/mingguan
-$byDayRoom = [];
+// Kelompokkan booking per tanggal (gabungan semua ruangan terpilih) untuk tampilan harian/mingguan
+$roomById = [];
+foreach ($selectedRooms as $r) { $roomById[$r['id']] = $r; }
+
+$byDay = [];
 if ($view !== 'bulanan') {
-    foreach ($days as $d) { $byDayRoom[$d] = []; }
+    foreach ($days as $d) { $byDay[$d] = []; }
     foreach ($bookings as $b) {
+        if (!isset($roomById[$b['room_id']])) continue;
         foreach ($days as $d) {
             if ($d >= $b['tanggal_mulai'] && $d <= $b['tanggal_selesai']) {
-                $byDayRoom[$d][$b['room_id']][] = $b;
+                $byDay[$d][] = $b;
             }
         }
     }
+}
+
+/**
+ * Hitung posisi waktu (jam desimal, jam clamp ke rentang grid) tiap booking pada
+ * hari tertentu, lalu bagi ke "lane" berdampingan hanya untuk booking yang jamnya
+ * benar-benar tumpang tindih — supaya lebar kolom tidak dipecah rata berdasarkan
+ * jumlah ruangan yang dicentang, tapi mengikuti tumpang tindih jadwal yang nyata.
+ */
+function schedAssignLanes(array $items, string $day, int $gridStartHour, int $gridEndHour): array
+{
+    foreach ($items as &$it) {
+        $s = ($day === $it['tanggal_mulai']) ? schedTimeToDecimal($it['jam_mulai']) : $gridStartHour;
+        $e = ($day === $it['tanggal_selesai']) ? schedTimeToDecimal($it['jam_selesai']) : $gridEndHour;
+        $it['_start'] = max($s, $gridStartHour);
+        $it['_end']   = min($e, $gridEndHour);
+    }
+    unset($it);
+    $items = array_values(array_filter($items, fn ($it) => $it['_end'] > $it['_start']));
+    usort($items, fn ($a, $b) => $a['_start'] <=> $b['_start']);
+
+    $laneEnds = [];
+    foreach ($items as &$it) {
+        $placed = false;
+        foreach ($laneEnds as $li => $endT) {
+            if ($it['_start'] >= $endT) {
+                $it['_lane'] = $li;
+                $laneEnds[$li] = $it['_end'];
+                $placed = true;
+                break;
+            }
+        }
+        if (!$placed) {
+            $li = count($laneEnds);
+            $it['_lane'] = $li;
+            $laneEnds[$li] = $it['_end'];
+        }
+    }
+    unset($it);
+    $totalLanes = max(count($laneEnds), 1);
+    foreach ($items as &$it) { $it['_lanes'] = $totalLanes; }
+    unset($it);
+    return $items;
 }
 
 $hourSpan   = $gridEndHour - $gridStartHour;
@@ -86,7 +132,7 @@ $gridHeight = $hourSpan * $hourHeight;
                 <a href="<?= schedUrl($view, $calNext, $selectedRoomIds) ?>" class="sched-mini-nav"><i class="bi bi-chevron-right"></i></a>
             </div>
             <div class="sched-mini-grid">
-                <?php foreach (['Se','Se','Ra','Ka','Ju','Sa','Mi'] as $dl): ?>
+                <?php foreach (['Sen','Sel','Rab','Kam','Jum','Sab','Min'] as $dl): ?>
                 <div class="sched-mini-dl"><?= $dl ?></div>
                 <?php endforeach; ?>
                 <?php for ($i = 1; $i < $calDow; $i++): ?>
@@ -186,35 +232,27 @@ $gridHeight = $hourSpan * $hourHeight;
                             <?php for ($h = $gridStartHour; $h <= $gridEndHour; $h++): ?>
                             <div class="sched-gridline" style="top:<?= ($h - $gridStartHour) * $hourHeight ?>px"></div>
                             <?php endfor; ?>
-                            <div class="sched-subcols">
-                                <?php foreach ($selectedRooms as $room):
-                                    $roomBookings = $byDayRoom[$d][$room['id']] ?? [];
+                            <div class="sched-blocks">
+                                <?php foreach (schedAssignLanes($byDay[$d] ?? [], $d, $gridStartHour, $gridEndHour) as $b):
+                                    $top       = ($b['_start'] - $gridStartHour) * $hourHeight;
+                                    $height    = max(($b['_end'] - $b['_start']) * $hourHeight, 24);
+                                    $laneW     = 100 / $b['_lanes'];
+                                    $left      = $b['_lane'] * $laneW;
+                                    $room      = $roomById[$b['room_id']] ?? null;
+                                    $roomName  = $room ? $room['nama_ruangan'] : '';
+                                    $canOpen   = is_admin_role() || (int) ($b['user_id'] ?? 0) === (int) session()->get('user_id');
+                                    $tag       = $canOpen ? 'a' : 'div';
+                                    $hrefAttr  = $canOpen ? 'href="' . base_url("bookings/{$b['id']}") . '"' : '';
                                 ?>
-                                <div class="sched-subcol">
-                                    <?php foreach ($roomBookings as $b):
-                                        $startH = ($d === $b['tanggal_mulai']) ? schedTimeToDecimal($b['jam_mulai']) : $gridStartHour;
-                                        $endH   = ($d === $b['tanggal_selesai']) ? schedTimeToDecimal($b['jam_selesai']) : $gridEndHour;
-                                        $startH = max($startH, $gridStartHour);
-                                        $endH   = min($endH, $gridEndHour);
-                                        if ($endH <= $startH) continue;
-                                        $top    = ($startH - $gridStartHour) * $hourHeight;
-                                        $height = max(($endH - $startH) * $hourHeight, 20);
-                                    ?>
-                                    <?php
-                                        $canOpen = is_admin_role() || (int) ($b['user_id'] ?? 0) === (int) session()->get('user_id');
-                                        $tag = $canOpen ? 'a' : 'div';
-                                        $hrefAttr = $canOpen ? 'href="' . base_url("bookings/{$b['id']}") . '"' : '';
-                                    ?>
-                                    <<?= $tag ?> <?= $hrefAttr ?> class="sched-block sched-block-<?= $b['sched_status'] ?>"
-                                       style="top:<?= $top ?>px;height:<?= $height ?>px"
-                                       title="<?= esc($b['nama_peminjam']) ?> — <?= esc($room['nama_ruangan']) ?> (<?= substr($b['jam_mulai'],0,5) ?>–<?= substr($b['jam_selesai'],0,5) ?>)">
-                                        <div class="sb-title"><?= esc($b['nama_peminjam']) ?></div>
-                                        <?php if (count($selectedRooms) > 1): ?>
-                                        <div class="sb-room"><?= esc($room['nama_ruangan']) ?></div>
-                                        <?php endif; ?>
-                                    </<?= $tag ?>>
-                                    <?php endforeach; ?>
-                                </div>
+                                <<?= $tag ?> <?= $hrefAttr ?> class="sched-block sched-block-<?= $b['sched_status'] ?>"
+                                   style="top:<?= $top ?>px;height:<?= $height ?>px;left:calc(<?= $left ?>% + 2px);width:calc(<?= $laneW ?>% - 4px)"
+                                   title="<?= esc($b['nama_peminjam']) ?> — <?= esc($roomName) ?> (<?= substr($b['jam_mulai'],0,5) ?>–<?= substr($b['jam_selesai'],0,5) ?>)">
+                                    <div class="sb-title"><?= esc($b['nama_peminjam']) ?></div>
+                                    <div class="sb-room"><?= esc($roomName) ?></div>
+                                    <?php if ($height >= 46): ?>
+                                    <div class="sb-time"><?= substr($b['jam_mulai'],0,5) ?>–<?= substr($b['jam_selesai'],0,5) ?></div>
+                                    <?php endif; ?>
+                                </<?= $tag ?>>
                                 <?php endforeach; ?>
                             </div>
                         </div>

@@ -386,15 +386,25 @@
         .sched-day-body { position: relative; background: #fff; }
         .sched-day-body.is-today { background: #fefaf5; }
         .sched-gridline { position: absolute; left: 0; right: 0; border-top: 1px solid #f3f1ee; }
-        .sched-subcols { position: absolute; inset: 0; display: flex; }
-        .sched-subcol { flex: 1; position: relative; border-left: 1px dashed #f5f2ef; }
-        .sched-subcol:first-child { border-left: none; }
+        .sched-blocks { position: absolute; inset: 0; }
         .sched-block {
-            position: absolute; left: 2px; right: 2px; border-radius: 5px; padding: 3px 5px;
-            overflow: hidden; text-decoration: none; display: block; box-shadow: 0 1px 2px rgba(0,0,0,.12);
+            position: absolute; border-radius: 6px; padding: 4px 7px;
+            overflow: hidden; text-decoration: none; display: block; box-shadow: 0 1px 3px rgba(0,0,0,.18);
+            border: 1px solid rgba(255,255,255,.25);
         }
-        .sched-block .sb-title { font-size: .68rem; font-weight: 700; color: #fff; line-height: 1.2; }
-        .sched-block .sb-room { font-size: .62rem; color: rgba(255,255,255,.85); line-height: 1.1; }
+        .sched-block:hover { filter: brightness(1.08); box-shadow: 0 2px 6px rgba(0,0,0,.25); z-index: 5; }
+        .sched-block .sb-title {
+            font-size: .72rem; font-weight: 700; color: #fff; line-height: 1.25;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .sched-block .sb-room {
+            font-size: .66rem; color: rgba(255,255,255,.88); line-height: 1.2; margin-top: 1px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .sched-block .sb-time {
+            font-size: .64rem; color: rgba(255,255,255,.8); margin-top: 2px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
         .sched-block-ongoing { background: #dc2626; }
         .sched-block-pending { background: #d97706; }
         .sched-block-booked  { background: #16a34a; }

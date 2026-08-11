@@ -35,6 +35,10 @@ class BookingController extends BaseController
         $this->roomModel    = new RoomModel();
         $this->bookingModel = new BookingModel();
         $this->db           = \Config\Database::connect();
+
+        // Pastikan booking 'menunggu' yang tanggal mulainya sudah lewat otomatis
+        // dibatalkan sebelum aksi apa pun di controller ini dijalankan.
+        $this->bookingModel->expireOverduePending();
     }
 
     protected function isAdmin(): bool

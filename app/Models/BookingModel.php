@@ -103,6 +103,38 @@ class BookingModel extends Model
             ->getRowArray() ?: null;
     }
 
+    /**
+     * Otomatis batalkan booking berstatus 'pending' yang tanggal mulainya sudah lewat
+     * (tidak sempat dikonfirmasi/ditolak admin sampai tanggal acaranya terlewat).
+     *
+     * Dipanggil secara "lazy" setiap kali halaman Daftar Booking, Dashboard, atau
+     * Pantau Jadwal diakses — jadi tidak wajib ada cron job supaya tetap berjalan.
+     * Untuk ketepatan waktu yang lebih presisi (mis. langsung jam 00:00), bisa juga
+     * dijadwalkan lewat command `php spark bookings:expire-pending`.
+     *
+     * @return int Jumlah booking yang dibatalkan otomatis pada pemanggilan ini
+     */
+    public function expireOverduePending(): int
+    {
+        $today = date('Y-m-d');
+
+        $overdue = $this->where('status', 'pending')
+            ->where('tanggal_mulai <', $today)
+            ->findAll();
+
+        $autoNote = 'Dibatalkan otomatis sistem — tidak dikonfirmasi admin hingga tanggal mulai booking terlewat.';
+
+        foreach ($overdue as $b) {
+            $existingNote = trim((string) ($b['catatan'] ?? ''));
+            $this->update($b['id'], [
+                'status'  => 'cancelled',
+                'catatan' => $existingNote !== '' ? $existingNote . ' | ' . $autoNote : $autoNote,
+            ]);
+        }
+
+        return count($overdue);
+    }
+
     public function getStats(?int $userId = null): array
     {
         $today = date('Y-m-d');
