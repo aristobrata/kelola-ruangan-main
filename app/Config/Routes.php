@@ -22,6 +22,7 @@ $routes->get('rooms/(:num)', 'RoomController::show/$1');
 $routes->get('rooms/edit/(:num)', 'RoomController::edit/$1', ['filter' => 'adminOnly']);
 $routes->post('rooms/update/(:num)', 'RoomController::update/$1', ['filter' => 'adminOnly']);
 $routes->post('rooms/delete/(:num)', 'RoomController::delete/$1', ['filter' => 'adminOnly']);
+$routes->post('rooms/photo/delete/(:num)', 'RoomController::deletePhoto/$1', ['filter' => 'adminOnly']);
 
 // Bookings — user membuat & mengelola booking miliknya sendiri,
 // admin melihat semua booking serta menyetujui/menolak/menandai selesai.

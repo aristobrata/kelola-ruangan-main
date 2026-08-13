@@ -3,24 +3,56 @@
 namespace App\Controllers;
 
 use App\Models\RoomModel;
+use App\Models\RoomPhotoModel;
 use CodeIgniter\Database\BaseConnection;
+use CodeIgniter\HTTP\Files\UploadedFile;
 
 class RoomController extends BaseController
 {
     protected RoomModel      $roomModel;
+    protected RoomPhotoModel $roomPhotoModel;
     protected BaseConnection $db;
 
     /** Folder fisik penyimpanan foto ruangan (public, agar bisa diakses langsung via URL) */
     protected string $uploadPath = FCPATH . 'uploads/rooms/';
 
+    /** Maksimal jumlah foto tambahan (galeri) per ruangan */
+    protected int $maxGalleryPhotos = 8;
+
     public function __construct()
     {
-        $this->roomModel = new RoomModel();
-        $this->db        = \Config\Database::connect();
+        $this->roomModel      = new RoomModel();
+        $this->roomPhotoModel = new RoomPhotoModel();
+        $this->db             = \Config\Database::connect();
     }
 
     /**
-     * Memvalidasi & memindahkan file foto yang diunggah.
+     * Validasi & pindahkan satu file foto yang sudah diunggah.
+     * Mengembalikan ['filename' => ...] jika berhasil, atau ['error' => ...] jika gagal.
+     */
+    protected function processUploadedFile(UploadedFile $file): array
+    {
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!in_array($file->getMimeType(), $allowedMimes, true)) {
+            return ['error' => 'Format foto harus JPG, PNG, atau WEBP.'];
+        }
+
+        if ($file->getSize() > 2048 * 1024) {
+            return ['error' => 'Ukuran foto maksimal 2 MB per file.'];
+        }
+
+        if (!is_dir($this->uploadPath)) {
+            mkdir($this->uploadPath, 0755, true);
+        }
+
+        $newName = $file->getRandomName();
+        $file->move($this->uploadPath, $newName);
+
+        return ['filename' => $newName];
+    }
+
+    /**
+     * Memvalidasi & memindahkan file foto UTAMA yang diunggah.
      * Mengembalikan nama file baru, atau null jika tidak ada file yang diunggah.
      * Melempar pesan error via session flashdata + return false jika file tidak valid.
      */
@@ -32,23 +64,35 @@ class RoomController extends BaseController
             return null; // tidak ada file baru diunggah
         }
 
-        $allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!in_array($file->getMimeType(), $allowedMimes, true)) {
-            return ['error' => 'Format foto harus JPG, PNG, atau WEBP.'];
+        return $this->processUploadedFile($file);
+    }
+
+    /**
+     * Memvalidasi & memindahkan beberapa file foto TAMBAHAN (galeri) sekaligus.
+     * Mengembalikan ['filenames' => [...]] jika semua berhasil, atau ['error' => ...]
+     * pada kegagalan pertama (file yang sudah sempat dipindah sebelum error akan dihapus lagi).
+     */
+    protected function handleGalleryUpload(string $fieldName = 'foto_tambahan'): array
+    {
+        $files = $this->request->getFileMultiple($fieldName) ?? [];
+        $moved = [];
+
+        foreach ($files as $file) {
+            if (!$file || !$file->isValid() || $file->getError() === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+
+            $result = $this->processUploadedFile($file);
+            if (isset($result['error'])) {
+                foreach ($moved as $fn) {
+                    $this->deleteFotoFile($fn);
+                }
+                return ['error' => $result['error']];
+            }
+            $moved[] = $result['filename'];
         }
 
-        if ($file->getSize() > 2048 * 1024) {
-            return ['error' => 'Ukuran foto maksimal 2 MB.'];
-        }
-
-        if (!is_dir($this->uploadPath)) {
-            mkdir($this->uploadPath, 0755, true);
-        }
-
-        $newName = $file->getRandomName();
-        $file->move($this->uploadPath, $newName);
-
-        return ['filename' => $newName];
+        return ['filenames' => $moved];
     }
 
     protected function deleteFotoFile(?string $filename): void
@@ -119,6 +163,24 @@ class RoomController extends BaseController
             'status'       => $this->request->getPost('status'),
             'foto'         => $foto,
         ]);
+        $roomId = $this->roomModel->getInsertID();
+
+        $gallery = $this->handleGalleryUpload('foto_tambahan');
+        if (isset($gallery['filenames'])) {
+            $toInsert = array_slice($gallery['filenames'], 0, $this->maxGalleryPhotos);
+            foreach ($toInsert as $i => $fn) {
+                $this->roomPhotoModel->insert(['room_id' => $roomId, 'filename' => $fn, 'urutan' => $i]);
+            }
+            foreach (array_slice($gallery['filenames'], $this->maxGalleryPhotos) as $fn) {
+                $this->deleteFotoFile($fn); // buang file yang melebihi batas maksimal
+            }
+        }
+
+        if (isset($gallery['error'])) {
+            return redirect()->to(base_url('rooms'))
+                ->with('success', 'Ruangan berhasil ditambahkan!')
+                ->with('error', 'Namun foto tambahan gagal diunggah: ' . $gallery['error']);
+        }
 
         return redirect()->to(base_url('rooms'))->with('success', 'Ruangan berhasil ditambahkan!');
     }
@@ -131,9 +193,10 @@ class RoomController extends BaseController
         }
 
         return view('rooms/form', [
-            'title'  => 'Edit Ruangan',
-            'room'   => $room,
-            'action' => base_url("rooms/update/{$id}"),
+            'title'      => 'Edit Ruangan',
+            'room'       => $room,
+            'roomPhotos' => $this->roomPhotoModel->getForRoom($id),
+            'action'     => base_url("rooms/update/{$id}"),
         ]);
     }
 
@@ -156,6 +219,7 @@ class RoomController extends BaseController
             return view('rooms/form', [
                 'title'      => 'Edit Ruangan',
                 'room'       => $room,
+                'roomPhotos' => $this->roomPhotoModel->getForRoom($id),
                 'action'     => base_url("rooms/update/{$id}"),
                 'validation' => $this->validator,
             ]);
@@ -165,10 +229,11 @@ class RoomController extends BaseController
         $upload = $this->handleFotoUpload('foto');
         if (is_array($upload) && isset($upload['error'])) {
             return view('rooms/form', [
-                'title'  => 'Edit Ruangan',
-                'room'   => $room,
-                'action' => base_url("rooms/update/{$id}"),
-                'error'  => $upload['error'],
+                'title'      => 'Edit Ruangan',
+                'room'       => $room,
+                'roomPhotos' => $this->roomPhotoModel->getForRoom($id),
+                'action'     => base_url("rooms/update/{$id}"),
+                'error'      => $upload['error'],
             ]);
         }
         if (is_array($upload) && isset($upload['filename'])) {
@@ -193,6 +258,35 @@ class RoomController extends BaseController
             'foto'         => $foto,
         ]);
 
+        // Tambahkan foto galeri baru (jika ada) — foto lama yang sudah tersimpan tidak terpengaruh
+        $existingCount = count($this->roomPhotoModel->getForRoom($id));
+        $remainingSlots = max($this->maxGalleryPhotos - $existingCount, 0);
+        $gallery = $this->handleGalleryUpload('foto_tambahan');
+        $galleryLimitNote = '';
+        if (isset($gallery['filenames'])) {
+            $toInsert = array_slice($gallery['filenames'], 0, $remainingSlots);
+            foreach ($toInsert as $i => $fn) {
+                $this->roomPhotoModel->insert(['room_id' => $id, 'filename' => $fn, 'urutan' => $existingCount + $i]);
+            }
+            $skipped = array_slice($gallery['filenames'], $remainingSlots);
+            foreach ($skipped as $fn) {
+                $this->deleteFotoFile($fn); // buang file yang melebihi batas maksimal
+            }
+            if (count($skipped) > 0) {
+                $galleryLimitNote = count($skipped) . ' foto tidak disimpan karena galeri sudah mencapai batas maksimal ' . $this->maxGalleryPhotos . ' foto.';
+            }
+        }
+        if (isset($gallery['error'])) {
+            return redirect()->to(base_url('rooms'))
+                ->with('success', 'Ruangan berhasil diperbarui!')
+                ->with('error', 'Namun foto tambahan gagal diunggah: ' . $gallery['error']);
+        }
+        if ($galleryLimitNote !== '') {
+            return redirect()->to(base_url('rooms'))
+                ->with('success', 'Ruangan berhasil diperbarui!')
+                ->with('error', $galleryLimitNote);
+        }
+
         return redirect()->to(base_url('rooms'))->with('success', 'Ruangan berhasil diperbarui!');
     }
 
@@ -213,8 +307,27 @@ class RoomController extends BaseController
         }
 
         $this->deleteFotoFile($room['foto'] ?? null);
+        foreach ($this->roomPhotoModel->getForRoom($id) as $p) {
+            $this->deleteFotoFile($p['filename']);
+        }
+        $this->roomPhotoModel->where('room_id', $id)->delete();
         $this->roomModel->delete($id);
         return redirect()->to(base_url('rooms'))->with('success', 'Ruangan berhasil dihapus!');
+    }
+
+    /** Hapus satu foto galeri (bukan foto utama) milik sebuah ruangan. */
+    public function deletePhoto(int $photoId)
+    {
+        $photo = $this->roomPhotoModel->find($photoId);
+        if (!$photo) {
+            return redirect()->back()->with('error', 'Foto tidak ditemukan.');
+        }
+
+        $roomId = $photo['room_id'];
+        $this->deleteFotoFile($photo['filename']);
+        $this->roomPhotoModel->delete($photoId);
+
+        return redirect()->to(base_url("rooms/edit/{$roomId}"))->with('success', 'Foto galeri berhasil dihapus.');
     }
 
     public function show(int $id)
@@ -232,9 +345,10 @@ class RoomController extends BaseController
             ->getResultArray();
 
         return view('rooms/show', [
-            'title'    => 'Detail Ruangan',
-            'room'     => $room,
-            'bookings' => $bookings,
+            'title'      => 'Detail Ruangan',
+            'room'       => $room,
+            'roomPhotos' => $this->roomPhotoModel->getForRoom($id),
+            'bookings'   => $bookings,
         ]);
     }
 }

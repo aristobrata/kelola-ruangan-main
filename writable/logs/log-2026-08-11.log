@@ -1,0 +1,101 @@
+ERROR - 2026-08-11 11:55:12 --> Table 'kelola_ruangan.room_photos' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `room_photos`
+WHERE `room_id` = 1
+ORDER BY `urutan` ASC, `id` ASC', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `room_photos`
+WHERE `room_id` = 1
+ORDER BY `urutan` ASC, `id` ASC')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `room_photos`
+WHERE `room_id` = 1
+ORDER BY `urutan` ASC, `id` ASC')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `room_photos`
+WHERE `room_id` = :room_id:
+ORDER BY `urutan` ASC, `id` ASC', [...], false)
+ 5 SYSTEMPATH\Model.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\BaseModel.php(676): CodeIgniter\Model->doFindAll(0, 0)
+ 7 APPPATH\Models\RoomPhotoModel.php(21): CodeIgniter\BaseModel->findAll()
+ 8 APPPATH\Controllers\RoomController.php(350): App\Models\RoomPhotoModel->getForRoom(1)
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\RoomController->show(1)
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RoomController))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\kelola-ruangan-main\\public\\index.php')
+CRITICAL - 2026-08-11 11:55:13 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'kelola_ruangan.room_photos' doesn't exist
+[Method: GET, Route: rooms/1]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `room_photos`
+WHERE `room_id` = :room_id:
+ORDER BY `urutan` ASC, `id` ASC', [...], false)
+ 2 SYSTEMPATH\Model.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\BaseModel.php(676): CodeIgniter\Model->doFindAll(0, 0)
+ 4 APPPATH\Models\RoomPhotoModel.php(21): CodeIgniter\BaseModel->findAll()
+ 5 APPPATH\Controllers\RoomController.php(350): App\Models\RoomPhotoModel->getForRoom(1)
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\RoomController->show(1)
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RoomController))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\kelola-ruangan-main\\public\\index.php')
+CRITICAL - 2026-08-11 11:55:13 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'kelola_ruangan.room_photos' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `room_photos`
+WHERE `room_id` = 1
+ORDER BY `urutan` ASC, `id` ASC')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `room_photos`
+WHERE `room_id` = 1
+ORDER BY `urutan` ASC, `id` ASC')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `room_photos`
+WHERE `room_id` = :room_id:
+ORDER BY `urutan` ASC, `id` ASC', [...], false)
+ 4 SYSTEMPATH\Model.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\BaseModel.php(676): CodeIgniter\Model->doFindAll(0, 0)
+ 6 APPPATH\Models\RoomPhotoModel.php(21): CodeIgniter\BaseModel->findAll()
+ 7 APPPATH\Controllers\RoomController.php(350): App\Models\RoomPhotoModel->getForRoom(1)
+ 8 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\RoomController->show(1)
+ 9 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RoomController))
+10 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\kelola-ruangan-main\\public\\index.php')
+CRITICAL - 2026-08-11 11:55:13 --> [Caused by] mysqli_sql_exception: Table 'kelola_ruangan.room_photos' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `room_photos`
+WHERE `room_id` = 1
+ORDER BY `urutan` ASC, `id` ASC', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `room_photos`
+WHERE `room_id` = 1
+ORDER BY `urutan` ASC, `id` ASC')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `room_photos`
+WHERE `room_id` = 1
+ORDER BY `urutan` ASC, `id` ASC')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `room_photos`
+WHERE `room_id` = :room_id:
+ORDER BY `urutan` ASC, `id` ASC', [...], false)
+ 5 SYSTEMPATH\Model.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\BaseModel.php(676): CodeIgniter\Model->doFindAll(0, 0)
+ 7 APPPATH\Models\RoomPhotoModel.php(21): CodeIgniter\BaseModel->findAll()
+ 8 APPPATH\Controllers\RoomController.php(350): App\Models\RoomPhotoModel->getForRoom(1)
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\RoomController->show(1)
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RoomController))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\kelola-ruangan-main\\public\\index.php')

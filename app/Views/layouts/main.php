@@ -292,9 +292,20 @@
             opacity: .5;
             font-size: 2.2rem;
         }
-        .room-detail-photo { width: 100%; height: 200px; overflow: hidden; }
+        .room-detail-photo { width: 100%; height: 200px; overflow: hidden; position: relative; }
         .room-detail-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .room-detail-photo .room-card-photo-placeholder { font-size: 2.8rem; }
+        .room-photo-count-badge {
+            position: absolute; top: 10px; right: 10px; z-index: 3;
+            background: rgba(0,0,0,.55); color: #fff; font-size: .7rem; font-weight: 600;
+            padding: 3px 9px; border-radius: 20px;
+        }
+        .room-photo-indicators { margin-bottom: .4rem; }
+        .room-photo-indicators [data-bs-target] {
+            width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.6);
+            border: none; opacity: 1;
+        }
+        .room-photo-indicators [data-bs-target].active { background: #fff; }
 
         /* ── BADGES ── */
         .badge-available   { background: #dcfce7; color: #16a34a; font-weight: 600; }

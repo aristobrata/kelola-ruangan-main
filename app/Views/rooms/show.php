@@ -21,12 +21,41 @@ $statusCfg = [
     <div class="col-lg-4">
         <div class="section-card mb-3">
             <div class="room-card-bar <?= $room['status'] ?>"></div>
+            <?php
+                $allPhotos = [];
+                if (!empty($room['foto'])) { $allPhotos[] = $room['foto']; }
+                foreach ($roomPhotos ?? [] as $p) { $allPhotos[] = $p['filename']; }
+            ?>
             <div class="room-detail-photo">
-                <?php if (!empty($room['foto'])): ?>
-                <img src="<?= base_url('uploads/rooms/' . esc($room['foto'])) ?>" alt="Foto <?= esc($room['nama_ruangan']) ?>">
-                <?php else: ?>
+                <?php if (count($allPhotos) === 0): ?>
                 <div class="room-card-photo-placeholder">
                     <i class="bi bi-building"></i>
+                </div>
+                <?php elseif (count($allPhotos) === 1): ?>
+                <img src="<?= base_url('uploads/rooms/' . esc($allPhotos[0])) ?>" alt="Foto <?= esc($room['nama_ruangan']) ?>">
+                <?php else: ?>
+                <div id="roomPhotoCarousel" class="carousel slide h-100" data-bs-ride="false">
+                    <div class="carousel-inner h-100">
+                        <?php foreach ($allPhotos as $i => $fn): ?>
+                        <div class="carousel-item h-100 <?= $i === 0 ? 'active' : '' ?>">
+                            <img src="<?= base_url('uploads/rooms/' . esc($fn)) ?>" class="d-block w-100 h-100"
+                                 style="object-fit:cover" alt="Foto <?= esc($room['nama_ruangan']) ?> <?= $i + 1 ?>">
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#roomPhotoCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#roomPhotoCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                    <div class="carousel-indicators room-photo-indicators">
+                        <?php foreach ($allPhotos as $i => $fn): ?>
+                        <button type="button" data-bs-target="#roomPhotoCarousel" data-bs-slide-to="<?= $i ?>"
+                                class="<?= $i === 0 ? 'active' : '' ?>" aria-current="<?= $i === 0 ? 'true' : 'false' ?>"></button>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="room-photo-count-badge"><i class="bi bi-images me-1"></i><?= count($allPhotos) ?> foto</div>
                 </div>
                 <?php endif; ?>
             </div>

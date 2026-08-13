@@ -95,7 +95,7 @@
         </div>
 
         <div class="form-section mb-4">
-            <div class="form-section-title"><i class="bi bi-image-fill"></i>Foto Ruangan</div>
+            <div class="form-section-title"><i class="bi bi-image-fill"></i>Foto Utama</div>
             <div class="row g-3 align-items-start">
                 <div class="col-md-4">
                     <div class="photo-preview-box" id="photoPreviewBox">
@@ -111,10 +111,10 @@
                     </div>
                 </div>
                 <div class="col-md-8">
-                    <label class="form-label">Unggah Foto <?= $room ? '(opsional, ganti jika perlu)' : '(opsional)' ?></label>
+                    <label class="form-label">Unggah Foto Utama <?= $room ? '(opsional, ganti jika perlu)' : '(opsional)' ?></label>
                     <input type="file" name="foto" id="fotoInput" class="form-control" accept="image/png, image/jpeg, image/webp"
                            onchange="previewFoto(event)">
-                    <div class="form-text">Format JPG, PNG, atau WEBP. Maksimal 2 MB.</div>
+                    <div class="form-text">Format JPG, PNG, atau WEBP. Maksimal 2 MB. Foto ini yang tampil pertama di halaman detail.</div>
 
                     <?php if (!empty($room['foto'])): ?>
                     <div class="form-check mt-3">
@@ -126,6 +126,32 @@
                     <?php endif; ?>
                 </div>
             </div>
+        </div>
+
+        <div class="form-section mb-4">
+            <div class="form-section-title"><i class="bi bi-images"></i>Foto Tambahan (Galeri)</div>
+
+            <?php if (!empty($roomPhotos ?? [])): ?>
+            <div class="gallery-manage-grid mb-3">
+                <?php foreach ($roomPhotos as $p): ?>
+                <div class="gallery-manage-item">
+                    <img src="<?= base_url('uploads/rooms/' . esc($p['filename'])) ?>" alt="Foto galeri">
+                    <button type="button" class="gallery-manage-delete"
+                            onclick="document.getElementById('delPhoto<?= $p['id'] ?>').submit()" title="Hapus foto ini">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <form id="delPhoto<?= $p['id'] ?>" method="post" action="<?= base_url("rooms/photo/delete/{$p['id']}") ?>" class="d-none"
+                      onsubmit="return confirm('Hapus foto galeri ini?')">
+                    <?= csrf_field() ?>
+                </form>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+
+            <label class="form-label">Tambah Foto Galeri (bisa pilih beberapa sekaligus)</label>
+            <input type="file" name="foto_tambahan[]" class="form-control" accept="image/png, image/jpeg, image/webp" multiple>
+            <div class="form-text">Foto-foto ini bisa digeser (swipe) di halaman Detail Ruangan. Format JPG/PNG/WEBP, maksimal 2 MB per foto, total maksimal 8 foto galeri.</div>
         </div>
 
         <div class="d-flex gap-2">
@@ -155,6 +181,29 @@
     .photo-preview-placeholder { text-align: center; color: #9aa39c; }
     .photo-preview-placeholder i { font-size: 1.8rem; display: block; margin-bottom: .25rem; }
     .photo-preview-placeholder span { font-size: .75rem; }
+
+    .gallery-manage-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: .6rem;
+    }
+    .gallery-manage-item {
+        position: relative;
+        aspect-ratio: 1/1;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #f3f6f4;
+        border: 1px solid #e5e7eb;
+    }
+    .gallery-manage-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-manage-delete {
+        position: absolute; top: 4px; right: 4px;
+        width: 22px; height: 22px; border-radius: 50%;
+        background: rgba(220,38,38,.92); color: #fff; border: none;
+        display: flex; align-items: center; justify-content: center;
+        font-size: .7rem; cursor: pointer; padding: 0;
+    }
+    .gallery-manage-delete:hover { background: #b91c1c; }
 </style>
 <script>
     function previewFoto(event) {
