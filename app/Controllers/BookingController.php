@@ -88,6 +88,14 @@ class BookingController extends BaseController
         $rooms = $this->roomModel->where('status', 'available')->findAll();
         $selectedRoom = $this->request->getGet('room_id') ?? null;
 
+        $prefill = [
+            'jumlah_peserta'  => $this->request->getGet('jumlah_peserta'),
+            'tanggal_mulai'   => $this->request->getGet('tanggal'),
+            'tanggal_selesai' => $this->request->getGet('tanggal'),
+            'jam_mulai'       => $this->request->getGet('jam_mulai'),
+            'jam_selesai'     => $this->request->getGet('jam_selesai'),
+        ];
+
         return view('bookings/form', [
             'title'           => 'Buat Booking',
             'rooms'           => $rooms,
@@ -95,6 +103,7 @@ class BookingController extends BaseController
             'action'          => base_url('bookings/store'),
             'selectedRoom'    => $selectedRoom,
             'konsumsiOptions' => $this->konsumsiOptions,
+            'prefill'         => $prefill,
         ]);
     }
 

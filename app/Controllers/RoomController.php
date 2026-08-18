@@ -105,9 +105,18 @@ class RoomController extends BaseController
     public function index()
     {
         $rooms = $this->roomModel->getRoomsWithBookingStatus();
+
+        $filter = $this->request->getGet('filter');
+        if (in_array($filter, ['available', 'occupied', 'maintenance'], true)) {
+            $rooms = array_values(array_filter($rooms, fn ($r) => $r['booking_status'] === $filter));
+        } else {
+            $filter = '';
+        }
+
         return view('rooms/index', [
-            'title' => 'Manajemen Ruangan',
-            'rooms' => $rooms,
+            'title'  => 'Manajemen Ruangan',
+            'rooms'  => $rooms,
+            'filter' => $filter,
         ]);
     }
 

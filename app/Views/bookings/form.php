@@ -94,7 +94,7 @@
                         <div class="col-md-4">
                             <label class="form-label">Jumlah Peserta <span class="text-danger">*</span></label>
                             <input type="number" name="jumlah_peserta" class="form-control" min="1"
-                                   value="<?= esc(old('jumlah_peserta', $booking['jumlah_peserta'] ?? 1)) ?>"
+                                   value="<?= esc(old('jumlah_peserta', $booking['jumlah_peserta'] ?? ($prefill['jumlah_peserta'] ?? 1))) ?>"
                                    required>
                         </div>
                         <div class="col-12" id="roomInfo" style="display:none">
@@ -127,25 +127,25 @@
                         <div class="col-md-6">
                             <label class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
                             <input type="date" name="tanggal_mulai" class="form-control"
-                                   value="<?= esc(old('tanggal_mulai', $booking['tanggal_mulai'] ?? '')) ?>"
+                                   value="<?= esc(old('tanggal_mulai', $booking['tanggal_mulai'] ?? ($prefill['tanggal_mulai'] ?? ''))) ?>"
                                    min="<?= date('Y-m-d') ?>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Tanggal Selesai <span class="text-danger">*</span></label>
                             <input type="date" name="tanggal_selesai" class="form-control"
-                                   value="<?= esc(old('tanggal_selesai', $booking['tanggal_selesai'] ?? '')) ?>"
+                                   value="<?= esc(old('tanggal_selesai', $booking['tanggal_selesai'] ?? ($prefill['tanggal_selesai'] ?? ''))) ?>"
                                    min="<?= date('Y-m-d') ?>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Jam Mulai <span class="text-danger">*</span></label>
                             <input type="time" name="jam_mulai" class="form-control"
-                                   value="<?= esc(old('jam_mulai', isset($booking['jam_mulai']) ? substr($booking['jam_mulai'],0,5) : '')) ?>"
+                                   value="<?= esc(old('jam_mulai', isset($booking['jam_mulai']) ? substr($booking['jam_mulai'],0,5) : ($prefill['jam_mulai'] ?? ''))) ?>"
                                    required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Jam Selesai <span class="text-danger">*</span></label>
                             <input type="time" name="jam_selesai" class="form-control"
-                                   value="<?= esc(old('jam_selesai', isset($booking['jam_selesai']) ? substr($booking['jam_selesai'],0,5) : '')) ?>"
+                                   value="<?= esc(old('jam_selesai', isset($booking['jam_selesai']) ? substr($booking['jam_selesai'],0,5) : ($prefill['jam_selesai'] ?? ''))) ?>"
                                    required>
                         </div>
                     </div>

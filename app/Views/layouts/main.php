@@ -200,8 +200,11 @@
             justify-content: space-between;
             gap: .75rem;
             transition: box-shadow .2s, transform .2s;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
         }
-        .stat-card:hover { box-shadow: 0 8px 30px rgba(107,15,22,.1); transform: translateY(-2px); }
+        .stat-card:hover { box-shadow: 0 8px 30px rgba(107,15,22,.1); transform: translateY(-2px); color: inherit; }
         .stat-card::before {
             content: '';
             position: absolute;
@@ -560,6 +563,11 @@
         <a href="<?= base_url('bookings/create') ?>" class="nav-link-item <?= uri_string() === 'bookings/create' ? 'active' : '' ?>">
             <span class="nav-icon"><i class="bi bi-plus-circle-fill"></i></span>
             Buat Booking
+        </a>
+
+        <a href="<?= base_url('rekomendasi') ?>" class="nav-link-item <?= str_starts_with(uri_string(), 'rekomendasi') ? 'active' : '' ?>">
+            <span class="nav-icon"><i class="bi bi-stars"></i></span>
+            Rekomendasi Ruangan
         </a>
 
         <div class="nav-section-label">Filter Status</div>

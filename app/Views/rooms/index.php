@@ -1,9 +1,17 @@
-+++<?= $this->extend('layouts/main') ?>
+<?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <div class="small text-muted mb-1"><?= count($rooms) ?> ruangan terdaftar</div>
+        <div class="small text-muted mb-1">
+            <?= count($rooms) ?> ruangan <?= $filter ? 'ditemukan' : 'terdaftar' ?>
+            <?php if ($filter):
+                $filterLabels = ['available' => 'Tersedia', 'occupied' => 'Sedang Terpakai', 'maintenance' => 'Maintenance'];
+            ?>
+            &middot; Filter: <strong><?= esc($filterLabels[$filter] ?? $filter) ?></strong>
+            <a href="<?= base_url('rooms') ?>" class="text-decoration-none ms-1"><i class="bi bi-x-circle"></i> Hapus filter</a>
+            <?php endif; ?>
+        </div>
     </div>
     <?php if (is_admin_role()): ?>
     <a href="<?= base_url('rooms/create') ?>" class="btn btn-primary">

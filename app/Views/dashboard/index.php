@@ -23,7 +23,7 @@
 <!-- Stats Row 1 -->
 <div class="row g-3 mb-3">
     <div class="col-6 col-lg-3">
-        <div class="stat-card green">
+        <a href="<?= base_url('rooms') ?>" class="stat-card green">
             <div class="stat-body">
                 <div class="stat-kicker">Ringkasan</div>
                 <div class="stat-title">Total Ruangan</div>
@@ -31,10 +31,10 @@
                 <div class="stat-label">Total Ruangan</div>
             </div>
             <div class="stat-icon green"><i class="bi bi-building"></i></div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="stat-card green">
+        <a href="<?= base_url('rooms?filter=available') ?>" class="stat-card green">
             <div class="stat-body">
                 <div class="stat-kicker">Ringkasan</div>
                 <div class="stat-title">Ruangan Tersedia</div>
@@ -45,10 +45,10 @@
                 <div class="stat-progress-note"><?= $availableRooms ?>/<?= $totalRooms ?></div>
             </div>
             <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="stat-card orange">
+        <a href="<?= base_url('rooms?filter=occupied') ?>" class="stat-card orange">
             <div class="stat-body">
                 <div class="stat-kicker">Ringkasan</div>
                 <div class="stat-title">Sedang Terpakai</div>
@@ -59,10 +59,10 @@
                 <div class="stat-progress-note"><?= $occupiedRooms ?>/<?= $totalRooms ?></div>
             </div>
             <div class="stat-icon orange"><i class="bi bi-people-fill"></i></div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="stat-card red">
+        <a href="<?= base_url('rooms?filter=maintenance') ?>" class="stat-card red">
             <div class="stat-body">
                 <div class="stat-kicker">Ringkasan</div>
                 <div class="stat-title">Maintenance</div>
@@ -70,14 +70,14 @@
                 <div class="stat-label">Maintenance</div>
             </div>
             <div class="stat-icon red"><i class="bi bi-tools"></i></div>
-        </div>
+        </a>
     </div>
 </div>
 
 <!-- Stats Row 2 -->
 <div class="row g-3 mb-4">
     <div class="col-6 col-lg-3">
-        <div class="stat-card pink">
+        <a href="<?= base_url('jadwal?view=harian&date=' . date('Y-m-d')) ?>" class="stat-card pink">
             <div class="stat-body">
                 <div class="stat-kicker"><?= $isAdmin ? 'Booking' : 'Booking Saya' ?></div>
                 <div class="stat-title"><?= $isAdmin ? 'Hari Ini' : esc(session()->get('nama')) ?></div>
@@ -85,10 +85,10 @@
                 <div class="stat-label"><?= $isAdmin ? 'Booking Hari Ini' : 'Booking Saya Hari Ini' ?></div>
             </div>
             <div class="stat-icon pink"><i class="bi bi-calendar-day-fill"></i></div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="stat-card orange">
+        <a href="<?= base_url('bookings?status=pending') ?>" class="stat-card orange">
             <div class="stat-body">
                 <div class="stat-kicker"><?= $isAdmin ? 'Booking' : 'Booking Saya' ?></div>
                 <div class="stat-title"><?= $isAdmin ? 'Menunggu' : esc(session()->get('nama')) ?></div>
@@ -96,10 +96,10 @@
                 <div class="stat-label"><?= $isAdmin ? 'Menunggu Konfirmasi' : 'Booking Saya Menunggu' ?></div>
             </div>
             <div class="stat-icon orange"><i class="bi bi-clock-fill"></i></div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="stat-card green">
+        <a href="<?= base_url('bookings?status=approved') ?>" class="stat-card green">
             <div class="stat-body">
                 <div class="stat-kicker"><?= $isAdmin ? 'Booking' : 'Booking Saya' ?></div>
                 <div class="stat-title"><?= $isAdmin ? 'Disetujui' : esc(session()->get('nama')) ?></div>
@@ -107,10 +107,10 @@
                 <div class="stat-label"><?= $isAdmin ? 'Booking Disetujui' : 'Booking Saya Disetujui' ?></div>
             </div>
             <div class="stat-icon green"><i class="bi bi-check2-all"></i></div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="stat-card blue">
+        <a href="<?= base_url('bookings') ?>" class="stat-card blue">
             <div class="stat-body">
                 <div class="stat-kicker"><?= $isAdmin ? 'Booking' : 'Booking Saya' ?></div>
                 <div class="stat-title"><?= $isAdmin ? 'Total' : esc(session()->get('nama')) ?></div>
@@ -118,7 +118,7 @@
                 <div class="stat-label"><?= $isAdmin ? 'Total Semua Booking' : 'Total Booking Saya' ?></div>
             </div>
             <div class="stat-icon blue"><i class="bi bi-calendar3"></i></div>
-        </div>
+        </a>
     </div>
 </div>
 
