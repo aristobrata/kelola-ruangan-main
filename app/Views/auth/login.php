@@ -9,6 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
+                :root {
+            --green-dark:  #6b0f16;
+            --green-mid:   #8b1a24;
+            --green-light: #b3232f;
+            --green-pale:  #fbe9ea;
+            --gold:        #c9a227;
+            --gold-light:  #e8b64c;
+            --sidebar-w:   270px;
+            --topbar-h:    64px;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
@@ -19,7 +30,7 @@
         /* Left panel */
         .login-left {
             flex: 1;
-            background: linear-gradient(145deg, #6b0f16 0%, #8b1a24 40%, #b3232f 100%);
+            background: linear-gradient(180deg, var(--green-dark) 0%, #33080c 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -28,22 +39,8 @@
             position: relative;
             overflow: hidden;
         }
-        .login-left::before {
-            content: '';
-            position: absolute;
-            top: -80px; right: -80px;
-            width: 350px; height: 350px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.06);
-        }
-        .login-left::after {
-            content: '';
-            position: absolute;
-            bottom: -60px; left: -60px;
-            width: 280px; height: 280px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.04);
-        }
+        
+        
         .brand-logo {
             width: 90px; height: 90px;
             background: #fff;
@@ -141,12 +138,7 @@
         <small>Unit</small>
         <span>Learning & People Development</span>
     </div>
-    <div class="feature-list">
-        <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Manajemen ruangan terpusat</div>
-        <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Booking & penjadwalan mudah</div>
-        <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Cek ketersediaan real-time</div>
-        <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Riwayat penggunaan ruangan</div>
-    </div>
+    
 </div>
 
 <!-- Right Panel -->
@@ -208,10 +200,6 @@
     </form>
 
     <div class="login-footer">
-        <div class="mb-1">
-            <i class="bi bi-info-circle me-1"></i>
-            Default: <strong>admin / admin123</strong> &nbsp;|&nbsp; <strong>staff / staff123</strong>
-        </div>
         <div>&copy; <?= date('Y') ?> PT Semen Padang — Unit Learning & People Development</div>
     </div>
 </div>

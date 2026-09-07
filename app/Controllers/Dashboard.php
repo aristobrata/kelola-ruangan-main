@@ -12,6 +12,7 @@ class Dashboard extends BaseController
         $roomModel    = new RoomModel();
         $bookingModel = new BookingModel();
         $bookingModel->expireOverduePending();
+        $bookingModel->completeOverdueApprovedBookings();
 
         $isAdmin      = is_admin_role();
         // User (pembooking) hanya melihat statistik & jadwal booking miliknya sendiri.

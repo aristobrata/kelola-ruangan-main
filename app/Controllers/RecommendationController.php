@@ -35,7 +35,8 @@ class RecommendationController extends BaseController
         sort($availableFacilities);
 
         $jumlahPeserta    = $this->request->getGet('jumlah_peserta');
-        $tanggal          = $this->request->getGet('tanggal');
+        $tanggalMulai     = $this->request->getGet('tanggal_mulai');
+        $tanggalSelesai   = $this->request->getGet('tanggal_selesai');
         $jamMulai         = $this->request->getGet('jam_mulai');
         $jamSelesai       = $this->request->getGet('jam_selesai');
         $fasilitasDiminta = $this->request->getGet('fasilitas') ?? [];
@@ -48,11 +49,13 @@ class RecommendationController extends BaseController
         $errorMsg = '';
         $recommender = new RoomRecommender();
 
-        if ($jumlahPeserta && $tanggal && $jamMulai && $jamSelesai) {
+        if ($jumlahPeserta && $tanggalMulai && $tanggalSelesai && $jamMulai && $jamSelesai) {
             $searched = true;
             $jumlahPesertaInt = (int) $jumlahPeserta;
 
-            if ($jamSelesai <= $jamMulai) {
+            if ($tanggalSelesai < $tanggalMulai) {
+                $errorMsg = 'Tanggal selesai tidak boleh sebelum tanggal mulai.';
+            } elseif ($jamSelesai <= $jamMulai) {
                 $errorMsg = 'Jam selesai harus lebih besar dari jam mulai.';
             } elseif ($jumlahPesertaInt < 1) {
                 $errorMsg = 'Jumlah peserta minimal 1 orang.';
@@ -66,7 +69,7 @@ class RecommendationController extends BaseController
                     if ((int) $r['kapasitas'] < $jumlahPesertaInt) {
                         continue;
                     }
-                    if ($this->bookingModel->hasConflict((int) $r['id'], $tanggal, $tanggal, $jamMulai, $jamSelesai)) {
+                    if ($this->bookingModel->hasConflict((int) $r['id'], $tanggalMulai, $tanggalSelesai, $jamMulai, $jamSelesai)) {
                         continue;
                     }
 
@@ -91,7 +94,8 @@ class RecommendationController extends BaseController
             'title'               => 'Rekomendasi Ruangan',
             'availableFacilities' => $availableFacilities,
             'jumlahPeserta'       => $jumlahPeserta,
-            'tanggal'             => $tanggal,
+            'tanggalMulai'        => $tanggalMulai,
+            'tanggalSelesai'      => $tanggalSelesai,
             'jamMulai'            => $jamMulai,
             'jamSelesai'          => $jamSelesai,
             'fasilitasDiminta'    => $fasilitasDiminta,

@@ -19,8 +19,11 @@ class ScheduleController extends BaseController
         $this->db        = \Config\Database::connect();
 
         // Pastikan booking 'menunggu' yang tanggal mulainya sudah lewat otomatis
-        // dibatalkan sebelum jadwal ditampilkan.
-        (new \App\Models\BookingModel())->expireOverduePending();
+        // dibatalkan, dan booking yang disetujui otomatis ditandai selesai jika
+        // jadwalnya sudah lewat, sebelum jadwal ditampilkan.
+        $bm = new \App\Models\BookingModel();
+        $bm->expireOverduePending();
+        $bm->completeOverdueApprovedBookings();
     }
 
     public function index()

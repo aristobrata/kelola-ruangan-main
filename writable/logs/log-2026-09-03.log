@@ -1,0 +1,67 @@
+CRITICAL - 2026-09-03 15:47:20 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\BookingModel::completeOverdueApproved
+[Method: CLI, Route: bookings:expire-pending]
+in SYSTEMPATH\Model.php on line 761.
+ 1 APPPATH\Commands\ExpireOverdueBookings.php(28): CodeIgniter\Model->__call('completeOverdueApproved', [])
+ 2 SYSTEMPATH\CLI\Commands.php(74): App\Commands\ExpireOverdueBookings->run([])
+ 3 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('bookings:expire-pending', [])
+ 4 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 5 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 6 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+CRITICAL - 2026-09-03 15:48:32 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\BookingModel::completeOverdueApproved
+[Method: CLI, Route: bookings:expire-pending]
+in SYSTEMPATH\Model.php on line 761.
+ 1 APPPATH\Commands\ExpireOverdueBookings.php(28): CodeIgniter\Model->__call('completeOverdueApproved', [])
+ 2 SYSTEMPATH\CLI\Commands.php(74): App\Commands\ExpireOverdueBookings->run([])
+ 3 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('bookings:expire-pending', [])
+ 4 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 5 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 6 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+CRITICAL - 2026-09-03 15:49:13 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\BookingModel::completeOverdueApproved
+[Method: CLI, Route: bookings:expire-pending]
+in SYSTEMPATH\Model.php on line 761.
+ 1 APPPATH\Commands\ExpireOverdueBookings.php(28): CodeIgniter\Model->__call('completeOverdueApproved', [])
+ 2 SYSTEMPATH\CLI\Commands.php(74): App\Commands\ExpireOverdueBookings->run([])
+ 3 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('bookings:expire-pending', [])
+ 4 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 5 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 6 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+CRITICAL - 2026-09-03 15:49:59 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\BookingModel::completeOverdueApproved
+[Method: CLI, Route: bookings:expire-pending]
+in SYSTEMPATH\Model.php on line 761.
+ 1 APPPATH\Commands\ExpireOverdueBookings.php(28): CodeIgniter\Model->__call('completeOverdueApproved', [])
+ 2 SYSTEMPATH\CLI\Commands.php(74): App\Commands\ExpireOverdueBookings->run([])
+ 3 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('bookings:expire-pending', [])
+ 4 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 5 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 6 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+CRITICAL - 2026-09-03 15:52:04 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\BookingModel::completeOverdueApproved
+[Method: CLI, Route: bookings:expire-pending]
+in SYSTEMPATH\Model.php on line 761.
+ 1 APPPATH\Commands\ExpireOverdueBookings.php(28): CodeIgniter\Model->__call('completeOverdueApproved', [])
+ 2 SYSTEMPATH\CLI\Commands.php(74): App\Commands\ExpireOverdueBookings->run([])
+ 3 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('bookings:expire-pending', [])
+ 4 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 5 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 6 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+CRITICAL - 2026-09-03 15:52:26 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\BookingModel::completeOverdueApproved
+[Method: GET, Route: bookings]
+in SYSTEMPATH\Model.php on line 761.
+ 1 APPPATH\Controllers\BookingController.php(41): CodeIgniter\Model->__call('completeOverdueApproved', [])
+ 2 SYSTEMPATH\CodeIgniter.php(921): App\Controllers\BookingController->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(488): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\kelola-ruangan-main\\public\\index.php')
+CRITICAL - 2026-09-03 15:52:36 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\BookingModel::completeOverdueApproved
+[Method: GET, Route: bookings]
+in SYSTEMPATH\Model.php on line 761.
+ 1 APPPATH\Controllers\BookingController.php(41): CodeIgniter\Model->__call('completeOverdueApproved', [])
+ 2 SYSTEMPATH\CodeIgniter.php(921): App\Controllers\BookingController->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(488): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\kelola-ruangan-main\\public\\index.php')

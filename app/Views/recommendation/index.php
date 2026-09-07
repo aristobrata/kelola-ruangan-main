@@ -10,21 +10,26 @@
     </p>
     <form method="get" action="<?= base_url('rekomendasi') ?>">
         <div class="row g-3">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label class="form-label">Jumlah Peserta <span class="text-danger">*</span></label>
                 <input type="number" name="jumlah_peserta" class="form-control" min="1"
                        value="<?= esc($jumlahPeserta) ?>" required>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Tanggal <span class="text-danger">*</span></label>
-                <input type="date" name="tanggal" class="form-control" min="<?= date('Y-m-d') ?>"
-                       value="<?= esc($tanggal) ?>" required>
+            <div class="col-md-4">
+                <label class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
+                <input type="date" name="tanggal_mulai" class="form-control" min="<?= date('Y-m-d') ?>"
+                       value="<?= esc($tanggalMulai) ?>" required>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
+                <label class="form-label">Tanggal Selesai <span class="text-danger">*</span></label>
+                <input type="date" name="tanggal_selesai" class="form-control" min="<?= date('Y-m-d') ?>"
+                       value="<?= esc($tanggalSelesai) ?>" required>
+            </div>
+            <div class="col-md-6">
                 <label class="form-label">Jam Mulai <span class="text-danger">*</span></label>
                 <input type="time" name="jam_mulai" class="form-control" value="<?= esc($jamMulai) ?>" required>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <label class="form-label">Jam Selesai <span class="text-danger">*</span></label>
                 <input type="time" name="jam_selesai" class="form-control" value="<?= esc($jamSelesai) ?>" required>
             </div>
@@ -61,8 +66,18 @@
     </div>
 
     <?php else: ?>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="fw-bold">Hasil Rekomendasi — <?= count($results) ?> ruangan memenuhi kriteria</div>
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div>
+            <div class="fw-bold">Hasil Rekomendasi — <?= count($results) ?> ruangan memenuhi kriteria</div>
+            <div class="text-muted" style="font-size:.8rem">
+                <?php if ($tanggalMulai === $tanggalSelesai): ?>
+                <?= date('d M Y', strtotime($tanggalMulai)) ?>, <?= esc($jamMulai) ?>–<?= esc($jamSelesai) ?>
+                <?php else: ?>
+                <?= date('d M Y', strtotime($tanggalMulai)) ?> – <?= date('d M Y', strtotime($tanggalSelesai)) ?>
+                (<?= (int) ((strtotime($tanggalSelesai) - strtotime($tanggalMulai)) / 86400) + 1 ?> hari), <?= esc($jamMulai) ?>–<?= esc($jamSelesai) ?>
+                <?php endif; ?>
+            </div>
+        </div>
         <div class="text-muted" style="font-size:.78rem">
             Bobot kriteria: Kapasitas <?= $weights['kapasitas'] * 100 ?>% &middot;
             Fasilitas <?= $weights['fasilitas'] * 100 ?>% &middot;
@@ -73,11 +88,12 @@
     <?php foreach ($results as $i => $row):
         $room = $row['room'];
         $bookingUrl = base_url('bookings/create?' . http_build_query([
-            'room_id'        => $room['id'],
-            'jumlah_peserta' => $jumlahPeserta,
-            'tanggal'        => $tanggal,
-            'jam_mulai'      => $jamMulai,
-            'jam_selesai'    => $jamSelesai,
+            'room_id'         => $room['id'],
+            'jumlah_peserta'  => $jumlahPeserta,
+            'tanggal_mulai'   => $tanggalMulai,
+            'tanggal_selesai' => $tanggalSelesai,
+            'jam_mulai'       => $jamMulai,
+            'jam_selesai'     => $jamSelesai,
         ]));
     ?>
     <div class="section-card mb-3 <?= $i === 0 ? 'reco-top' : '' ?>">

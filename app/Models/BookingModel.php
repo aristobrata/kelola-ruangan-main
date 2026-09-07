@@ -135,6 +135,44 @@ class BookingModel extends Model
         return count($overdue);
     }
 
+    /**
+     * Otomatis tandai 'selesai' booking berstatus 'approved' begitu jadwal
+     * pelaksanaan agendanya (tanggal_selesai + jam_selesai) sudah terlewat —
+     * berlaku untuk semua booking, apapun penanggung biaya konsumsinya
+     * (Pusdiklat maupun Unit Peminjam).
+     *
+     * Dipanggil secara "lazy" di titik yang sama dengan expireOverduePending().
+     *
+     * @return int Jumlah booking yang ditandai selesai otomatis pada pemanggilan ini
+     */
+    public function completeOverdueApprovedBookings(): int
+    {
+        $today = date('Y-m-d');
+        $now   = date('H:i:s');
+
+        $overdue = $this->where('status', 'approved')
+            ->groupStart()
+                ->where('tanggal_selesai <', $today)
+                ->orGroupStart()
+                    ->where('tanggal_selesai', $today)
+                    ->where('jam_selesai <=', $now)
+                ->groupEnd()
+            ->groupEnd()
+            ->findAll();
+
+        $autoNote = 'Ditandai selesai otomatis sistem — jadwal pelaksanaan agenda telah terlewat.';
+
+        foreach ($overdue as $b) {
+            $existingNote = trim((string) ($b['catatan'] ?? ''));
+            $this->update($b['id'], [
+                'status'  => 'selesai',
+                'catatan' => $existingNote !== '' ? $existingNote . ' | ' . $autoNote : $autoNote,
+            ]);
+        }
+
+        return count($overdue);
+    }
+
     public function getStats(?int $userId = null): array
     {
         $today = date('Y-m-d');

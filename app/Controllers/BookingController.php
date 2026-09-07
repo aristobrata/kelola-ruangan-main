@@ -39,6 +39,7 @@ class BookingController extends BaseController
         // Pastikan booking 'menunggu' yang tanggal mulainya sudah lewat otomatis
         // dibatalkan sebelum aksi apa pun di controller ini dijalankan.
         $this->bookingModel->expireOverduePending();
+        $this->bookingModel->completeOverdueApprovedBookings();
     }
 
     protected function isAdmin(): bool
@@ -90,8 +91,8 @@ class BookingController extends BaseController
 
         $prefill = [
             'jumlah_peserta'  => $this->request->getGet('jumlah_peserta'),
-            'tanggal_mulai'   => $this->request->getGet('tanggal'),
-            'tanggal_selesai' => $this->request->getGet('tanggal'),
+            'tanggal_mulai'   => $this->request->getGet('tanggal_mulai'),
+            'tanggal_selesai' => $this->request->getGet('tanggal_selesai'),
             'jam_mulai'       => $this->request->getGet('jam_mulai'),
             'jam_selesai'     => $this->request->getGet('jam_selesai'),
         ];
